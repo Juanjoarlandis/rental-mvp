@@ -1,17 +1,17 @@
 /* -------------------------------------------------------------------------- */
 /*  src/features/items/AddItemModal.tsx                                       */
 /* -------------------------------------------------------------------------- */
-import { Fragment, useEffect, useState } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import { XMarkIcon, PhotoIcon } from "@heroicons/react/24/outline";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import toast from "react-hot-toast";
+import { Fragment, useEffect, useState } from 'react';
+import { Dialog, Transition } from '@headlessui/react';
+import { XMarkIcon, PhotoIcon } from '@heroicons/react/24/outline';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import toast from 'react-hot-toast';
 
-import useCategories, { Category } from "../categories/useCategories";
-import { useAuth } from "../../hooks/useAuth";
-import { api } from "../../api";
+import useCategories, { Category } from '../categories/useCategories';
+import { useAuth } from '../../hooks/useAuth';
+import { api } from '../../api';
 
 /* -------------------------------------------------------------------------- */
 /*                               schema + types                               */
@@ -20,16 +20,16 @@ import { api } from "../../api";
 const priceRegex = /^\d+([.,]\d{1,2})?$/; // hasta 2 decimales
 
 const schema = z.object({
-  name: z.string().min(3, "Mínimo 3 caracteres"),
+  name: z.string().min(3, 'Mínimo 3 caracteres'),
   description: z.string().max(500).optional(),
   price_per_h: z
     .string()
-    .regex(priceRegex, "Precio inválido")
-    .transform(v => Number(v.replace(",", "."))),
-  categories: z.array(z.number()).min(1, "Selecciona al menos una categoría"),
+    .regex(priceRegex, 'Precio inválido')
+    .transform(v => Number(v.replace(',', '.'))),
+  categories: z.array(z.number()).min(1, 'Selecciona al menos una categoría'),
   image: z
     .instanceof(File)
-    .refine(f => f.size < 5 * 1024 * 1024, "Máx. 5 MB")
+    .refine(f => f.size < 5 * 1024 * 1024, 'Máx. 5 MB')
     .optional()
 });
 
@@ -62,7 +62,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
   });
 
   /* --------------------------- preview de imagen -------------------------- */
-  const file = watch("image");
+  const file = watch('image');
   const [preview, setPreview] = useState<string | null>(null);
 
   useEffect(() => {
@@ -77,7 +77,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
   /* ------------------------------- submit --------------------------------- */
   async function onSubmit(data: FormData) {
     if (!token) {
-      toast.error("Debes haber iniciado sesión");
+      toast.error('Debes haber iniciado sesión');
       return;
     }
     try {
@@ -85,15 +85,15 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
       let image_url: string | undefined;
       if (data.image) {
         const fd = new FormData();
-        fd.append("file", data.image);
-        const up = await api.post<{ url: string }>("/upload/", fd, {
-          headers: { "Content-Type": "multipart/form-data" }
+        fd.append('file', data.image);
+        const up = await api.post<{ url: string }>('/upload/', fd, {
+          headers: { 'Content-Type': 'multipart/form-data' }
         });
         image_url = up.data.url;
       }
 
       /* 2.- creamos ítem */
-      await api.post("/items/", {
+      await api.post('/items/', {
         name: data.name,
         description: data.description,
         price_per_h: data.price_per_h,
@@ -101,18 +101,18 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
         image_url
       });
 
-      toast.success("¡Producto publicado!");
-      reset();          // limpia formulario
-      onCreated();      // refresca listado en el padre
-      onClose();        // cierra modal
+      toast.success('¡Producto publicado!');
+      reset();         // limpia formulario
+      onCreated();     // refresca listado en el padre
+      onClose();       // cierra modal
     } catch (err: any) {
       console.error(err);
-      toast.error(err.response?.data?.detail ?? "Error al crear producto");
+      toast.error(err.response?.data?.detail ?? 'Error al crear producto');
     }
   }
 
   /* ------------------------------------------------------------------------ */
-  /*                                 UI                                       */
+  /*                                   UI                                     */
   /* ------------------------------------------------------------------------ */
 
   return (
@@ -137,7 +137,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
           <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
         </Transition.Child>
 
-        {/* ---------- Panel ---------- */}
+        {/* ---------- Wrapper ---------- */}
         <div className="fixed inset-0 grid place-items-center p-4">
           <Transition.Child
             as={Fragment}
@@ -148,8 +148,11 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
             leaveFrom="scale-100 opacity-100"
             leaveTo="scale-95 opacity-0"
           >
-            <Dialog.Panel className="w-full max-w-2xl overflow-hidden rounded-xl bg-white shadow-xl">
-              {/* Header */}
+            {/* -------------------------------------------------------------- */}
+            {/*  Panel: alto máx. 90 vh, flex-col, scroll solo en el body     */}
+            {/* -------------------------------------------------------------- */}
+            <Dialog.Panel className="flex w-full max-w-2xl max-h-[90vh] flex-col overflow-x-hidden rounded-xl bg-white shadow-xl">
+              {/* ---------- Header (fijo) ---------- */}
               <div className="flex items-center justify-between border-b px-6 py-4">
                 <Dialog.Title className="text-lg font-semibold">
                   Nuevo producto
@@ -166,10 +169,10 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
                 </button>
               </div>
 
-              {/* Form */}
+              {/* ---------- Formulario (scrollable) ---------- */}
               <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="grid gap-6 px-6 py-8 md:grid-cols-2"
+                className="flex-1 overflow-y-auto px-6 py-8 grid gap-6 md:grid-cols-2"
               >
                 {/* --------------------------- Columna 1 --------------------------- */}
                 <div className="space-y-4">
@@ -177,7 +180,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
                   <div>
                     <label className="block text-sm font-medium">Nombre</label>
                     <input
-                      {...register("name")}
+                      {...register('name')}
                       className="form-input mt-1 w-full"
                       placeholder="Taladro Bosch 800 W"
                     />
@@ -194,7 +197,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
                       Descripción
                     </label>
                     <textarea
-                      {...register("description")}
+                      {...register('description')}
                       rows={5}
                       className="form-input mt-1 w-full resize-none"
                       placeholder="Añade detalles técnicos, estado, accesorios incluidos…"
@@ -212,7 +215,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
                       Precio / hora (€)
                     </label>
                     <input
-                      {...register("price_per_h")}
+                      {...register('price_per_h')}
                       className="form-input mt-1 w-full"
                       placeholder="3.5"
                       inputMode="decimal"
@@ -249,7 +252,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
                         accept="image/*"
                         className="sr-only"
                         onChange={e =>
-                          setValue("image", e.target.files?.[0] as File)
+                          setValue('image', e.target.files?.[0] as File)
                         }
                       />
                     </label>
@@ -265,22 +268,22 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
                     <p className="mb-1 text-sm font-medium">Categorías</p>
                     <div className="flex flex-wrap gap-2">
                       {cats.map((c: Category) => {
-                        const selected = watch("categories").includes(c.id);
+                        const selected = watch('categories').includes(c.id);
                         return (
                           <button
                             type="button"
                             key={c.id}
                             onClick={() => {
-                              const current = new Set(watch("categories"));
+                              const current = new Set(watch('categories'));
                               selected
                                 ? current.delete(c.id)
                                 : current.add(c.id);
-                              setValue("categories", [...current]);
+                              setValue('categories', [...current]);
                             }}
                             className={
                               selected
-                                ? "rounded-full bg-brand px-3 py-0.5 text-xs text-white"
-                                : "rounded-full border px-3 py-0.5 text-xs text-gray-600"
+                                ? 'rounded-full bg-brand px-3 py-0.5 text-xs text-white'
+                                : 'rounded-full border px-3 py-0.5 text-xs text-gray-600'
                             }
                           >
                             {c.name}
@@ -296,7 +299,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
                   </div>
                 </div>
 
-                {/* Footer */}
+                {/* --------------------------- Footer --------------------------- */}
                 <div className="md:col-span-2 flex justify-end gap-3">
                   <button
                     type="button"
