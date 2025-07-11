@@ -31,19 +31,21 @@
   "dependencies": {
     "@headlessui/react": "^2.2.4",
     "@heroicons/react": "^2.2.0",
-    "@hookform/resolvers": "^3.3.4",   
+    "@hookform/resolvers": "^3.3.4",
     "axios": "^1.6.8",
     "clsx": "^2.1.1",
+    "focus-trap-react": "^10.2.1",              
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.60.0",
     "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
     "react-router-dom": "^6.23.1",
-    "zod": "^3.23.4",                  
+    "zod": "^3.23.4",
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
+    "@tailwindcss/container-queries": "", 
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/line-clamp": "^0.4.4",
     "@tailwindcss/typography": "^0.5.16",
@@ -174,6 +176,16 @@ export default {
 module.exports = {
     content: ['./index.html', './src/**/*.{ts,tsx}'],
     theme: {
+        //   ↓↓↓ breakpoints fluidos
+        screens: {
+            xs: '375px',
+            sm: '640px',
+            md: '768px',
+            lg: '1024px',
+            xl: '1280px',
+            '2xl': '1440px',
+            '3xl': '1920px'
+        },
         container: { center: true, padding: '1rem' },
         extend: {
             fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
@@ -191,7 +203,7 @@ module.exports = {
         require('@tailwindcss/forms'),
         require('@tailwindcss/typography'),
         require('@tailwindcss/line-clamp'),
-        require('@tailwindcss/container-queries')       //  ← NEW
+        require('@tailwindcss/container-queries') // 🆕
     ]
 };
 
@@ -317,37 +329,45 @@ export const useAuth = () => {
 @tailwind components;
 @tailwind utilities;
 
-/* ----- BASE ----- */
+/* ---------- BASE ---------- */
 @layer base {
   html { @apply scroll-smooth; }
   body { @apply bg-gray-50 text-gray-800 antialiased font-sans; }
 }
 
-/* ----- COMPONENTS ----- */
+/* ---------- COMPONENTS ---------- */
 @layer components {
   /* Botones */
   .btn        { @apply inline-flex items-center justify-center rounded-md bg-brand px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-brand-hover disabled:opacity-60; }
   .btn--ghost { @apply inline-flex items-center justify-center rounded-md border border-brand px-4 py-2 text-sm font-medium text-brand transition-colors hover:bg-brand/5; }
 
   /* Badges */
-  .badge          { @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium; }
-  .badge--ok      { @apply badge bg-green-100 text-green-800; }
-  .badge--danger  { @apply badge bg-red-100 text-red-800; }
-}
+  .badge         { @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium; }
+  .badge--ok     { @apply badge bg-green-100 text-green-800; }
+  .badge--danger { @apply badge bg-red-100 text-red-800; }
 
-/* ----- UTILITIES PERSONALIZADAS ----- */
-@layer utilities {
-  .text-balance { text-wrap: balance; }
-}
-
-@layer components {
+  /* Campos select genérico */
   .form-select { @apply block w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-brand focus:ring-brand; }
-}
 
-@layer components {
+  /* Toast */
   .toast-success { @apply bg-green-600 text-white; }
   .toast-error   { @apply bg-red-600 text-white; }
+
+  /* Títulos fluidos (ejemplo h1) */
+  h1 { font-size: clamp(2.25rem, 5vw + 1rem, 3.5rem); } /* 36 px → 56 px aprox */
 }
+
+/* ---------- UTILITIES PERSONALIZADAS ---------- */
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+
+  /* Evita re-pintados innecesarios en grandes listas */
+  .content-auto { content-visibility: auto; }
+
+  /* Oculta scrollbar (usarlo con cuidado) */
+  .scrollbar-none::-webkit-scrollbar { display: none; }
+}
+
 
 --- frontend/src/features/auth/register.ts ---
 // src/features/auth/register.ts
@@ -765,6 +785,9 @@ import { useAuth } from '../../hooks/useAuth';
 import AddItemModal from './AddItemModal';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
+/* -------------------------------------------------- */
+/*                    Tipado filtros                  */
+/* -------------------------------------------------- */
 type FiltersT = {
   name?: string;
   min_price?: number;
@@ -774,15 +797,20 @@ type FiltersT = {
 };
 
 export default function ItemList() {
-  /* ---------------- Filtros ---------------- */
+  /* ------------------------------ filtros ------------------------------ */
   const [filters, setFilters] = useState<FiltersT>({});
+
+  /* Serializamos filtros → query-string */
   const params = useMemo(() => {
     const p = new URLSearchParams();
+
     Object.entries(filters).forEach(([k, v]) => {
       if (v === undefined || v === '') return;
       if (Array.isArray(v)) v.forEach(val => p.append(k, String(val)));
       else p.set(k, String(v));
     });
+
+    /* orden (price_asc | price_desc | name) */
     if (filters.order) {
       const [field, dir] = filters.order.split('_');
       p.set('order_by', field === 'price' ? 'price' : 'name');
@@ -794,17 +822,18 @@ export default function ItemList() {
   const { data: items, loading, refetch } = useItems(params);
   const { token } = useAuth();
 
-  /* ------------- Drawer móvil -------------- */
+  /* ----------------------- drawer móvil filtros ----------------------- */
   const [openFilters, setOpenFilters] = useState(false);
 
-  /* ------------- Infinite demo ------------- */
+  /* ------------------------ infinite-scroll demo ---------------------- */
   const sentinel = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (!sentinel.current) return;
     const ob = new IntersectionObserver(
-      e => {
-        if (e[0].isIntersecting && !loading) {
-          /* paginación futura */
+      entries => {
+        if (entries[0].isIntersecting && !loading) {
+          /* Aquí podrías paginar → aumentar offset y refetch() */
         }
       },
       { rootMargin: '600px' }
@@ -813,44 +842,39 @@ export default function ItemList() {
     return () => ob.disconnect();
   }, [loading]);
 
-  /* -------------- Modal add ---------------- */
+  /* ----------------------- modal “añadir ítem” ------------------------ */
   const [addOpen, setAddOpen] = useState(false);
 
-  /* ---------------- Render ----------------- */
+  /* -------------------------------------------------------------------- */
   return (
     <Container>
-      {/* ------ Botón filtros sólo móvil ------ */}
-      <button
-        onClick={() => setOpenFilters(true)}
-        className="btn mb-4 md:hidden"
-      >
-        <Bars3Icon className="h-5 w-5 mr-2" />
+      {/* ---------- botón abrir filtros (solo xs-sm) ---------- */}
+      <button onClick={() => setOpenFilters(true)} className="btn mb-4 md:hidden">
+        <Bars3Icon className="mr-2 h-5 w-5" />
         Filtros
       </button>
 
-      <div className="flex gap-10 md:flex-row flex-col">
-        {/* -------- Sidebar (off-canvas en móvil) -------- */}
+      <div className="flex flex-col gap-10 md:flex-row">
+        {/* ---------- Filtros (off-canvas en móvil) ---------- */}
+        {/* Backdrop */}
         <div
           className={`
-            fixed inset-0 z-40 bg-black/40 backdrop-blur-sm
-            transition-opacity md:hidden
+            fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity md:hidden
             ${openFilters ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
           `}
           onClick={() => setOpenFilters(false)}
         />
 
+        {/* Panel */}
         <aside
           className={`
-            fixed left-0 top-0 z-50 h-full w-72 bg-white p-6 shadow-xl
-            transition-transform md:static md:translate-x-0 md:h-auto md:w-auto md:bg-transparent md:shadow-none
+            fixed left-0 top-0 z-50 h-full w-72 bg-white p-6 shadow-xl transition-transform
+            md:static md:h-auto md:w-auto md:translate-x-0 md:bg-transparent md:shadow-none
             ${openFilters ? 'translate-x-0' : '-translate-x-full'}
           `}
         >
-          {/* cierre móvil */}
-          <button
-            className="mb-4 md:hidden"
-            onClick={() => setOpenFilters(false)}
-          >
+          {/* Cerrar (solo móvil) */}
+          <button onClick={() => setOpenFilters(false)} className="mb-4 md:hidden">
             <XMarkIcon className="h-6 w-6" />
           </button>
 
@@ -861,8 +885,9 @@ export default function ItemList() {
           />
         </aside>
 
-        {/* -------- Listado -------- */}
+        {/* -------------------- listado de tarjetas -------------------- */}
         <section className="flex-1">
+          {/* CTA añadir producto (solo usuarios logueados) */}
           {token && (
             <div className="flex justify-end">
               <button className="btn mb-4" onClick={() => setAddOpen(true)}>
@@ -871,6 +896,7 @@ export default function ItemList() {
             </div>
           )}
 
+          {/* loader inicial */}
           {loading && !items.length ? (
             <GridSkeleton />
           ) : (
@@ -878,28 +904,36 @@ export default function ItemList() {
               {items.map(it => (
                 <ItemCard key={it.id} item={it} />
               ))}
+              {/* sentinel infinite-scroll */}
               <div ref={sentinel} />
             </Grid>
           )}
 
+          {/* vacío */}
           {!loading && !items.length && (
-            <p className="py-6 text-center text-gray-500">
-              No hay resultados.
-            </p>
+            <p className="py-6 text-center text-gray-500">No hay resultados.</p>
           )}
         </section>
       </div>
 
+      {/* modal añadir */}
       <AddItemModal open={addOpen} onClose={() => setAddOpen(false)} onCreated={refetch} />
     </Container>
   );
 }
 
-/* ---------------- Helpers ---------------- */
+/* -------------------------------------------------- */
+/*                       Helpers                      */
+/* -------------------------------------------------- */
+
+/* Grid responsive: min-width 12 rem (≈192 px) y se
+   auto-ajusta con container-queries si el padre pasa
+   a ser un “container” — funciona también sin CQ. */
 const Grid = ({ children }: { children: React.ReactNode }) => (
   <div
     className="
-      grid gap-6 py-6
+      grid gap-6 py-6 content-auto
+      @container lg:[grid-template-columns:repeat(auto-fill,minmax(14rem,1fr))]
       [grid-template-columns:repeat(auto-fill,minmax(12rem,1fr))]
     "
   >
@@ -908,7 +942,11 @@ const Grid = ({ children }: { children: React.ReactNode }) => (
 );
 
 const GridSkeleton = () => (
-  <Grid>{Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)}</Grid>
+  <Grid>
+    {Array.from({ length: 8 }).map((_, i) => (
+      <SkeletonCard key={i} />
+    ))}
+  </Grid>
 );
 
 
@@ -1318,31 +1356,57 @@ export default function Home() {
 --- frontend/src/components/ui/SkeletonCard.tsx ---
 export default function SkeletonCard() {
   return (
-    <div className="overflow-hidden rounded-lg bg-white shadow-card">
-      <div className="aspect-[4/3] w-full animate-pulse bg-gray-200" />
+    <article
+      className="
+        flex flex-col overflow-hidden rounded-lg bg-white shadow-card
+        animate-pulse
+      "
+    >
+      {/* zona de imagen (mantiene proporción 4:3) */}
+      <div className="aspect-[4/3] w-full bg-gray-200" />
+
+      {/* zona de texto */}
       <div className="space-y-2 p-4">
-        <div className="h-4 w-2/3 animate-pulse rounded bg-gray-200" />
-        <div className="h-4 w-1/3 animate-pulse rounded bg-gray-200" />
+        <div className="h-4 w-2/3 rounded bg-gray-200" />
+        <div className="h-4 w-1/3 rounded bg-gray-200" />
       </div>
-    </div>
+    </article>
   );
 }
 
 
 --- frontend/src/components/ui/LazyImage.tsx ---
-// frontend/src/components/ui/LazyImage.tsx
 import { useState } from 'react';
 
-type Props = { src: string; alt: string; className?: string };
+type Props = {
+  src: string;
+  alt: string;
+  className?: string;
+  /** ancho estimado para el atributo `sizes` (ej. "100vw", "50vw") */
+  sizes?: string;
+};
 
-export default function LazyImage({ src, alt, className = '' }: Props) {
+export default function LazyImage({
+  src,
+  alt,
+  className = '',
+  sizes = '100vw'
+}: Props) {
   const [loaded, setLoaded] = useState(false);
+
+  /* genera srcset (320-640-960 px) */
+  const srcset = [320, 640, 960]
+    .map(w => `${src.replace(/(\?.*)?$/, '')}?w=${w} ${w}w`)
+    .join(', ');
 
   return (
     <img
-      src={src}                       // ← SIEMPRE el src real
+      src={src}
+      srcSet={srcset}
+      sizes={sizes}
       loading="lazy"
-      onLoad={() => setLoaded(true)}  // cuando acabe, quitamos fade-in
+      decoding="async"                    /* 🆕 */
+      onLoad={() => setLoaded(true)}
       className={`${className} transition-opacity duration-500 ${
         loaded ? 'opacity-100' : 'opacity-0'
       }`}
@@ -1562,8 +1626,10 @@ type Props = {
 };
 
 export default function QuickViewModal({ open, onClose, item }: Props) {
+  /* -------- si aún no hay datos -------- */
   if (!item) return null;
 
+  /* -------- URL de la imagen -------- */
   const imgSrc = resolveImage(
     item.image_url,
     `https://source.unsplash.com/800x600/?${encodeURIComponent(item.name)}`
@@ -1572,7 +1638,7 @@ export default function QuickViewModal({ open, onClose, item }: Props) {
   return (
     <Transition show={open} as={Fragment}>
       <Dialog onClose={onClose} className="relative z-50">
-        {/* ─────── Backdrop ─────── */}
+        {/* ---------------- Backdrop ---------------- */}
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-200"
@@ -1585,7 +1651,7 @@ export default function QuickViewModal({ open, onClose, item }: Props) {
           <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
         </Transition.Child>
 
-        {/* ─────── Panel ─────── */}
+        {/* ---------------- Panel ---------------- */}
         <div className="fixed inset-0 grid place-items-center p-4">
           <Transition.Child
             as={Fragment}
@@ -1598,52 +1664,50 @@ export default function QuickViewModal({ open, onClose, item }: Props) {
           >
             <Dialog.Panel
               className="
-                w-full max-w-3xl overflow-hidden rounded-xl bg-white shadow-xl
-                max-h-[90vh]                        /* ← evita que se salga */
-                flex flex-col
+                flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden
+                rounded-xl bg-white shadow-xl
               "
             >
-              {/* ───── Header ───── */}
+              {/* ---------- Header ---------- */}
               <div className="flex items-center justify-between border-b p-4">
                 <Dialog.Title className="text-lg font-semibold">
                   {item.name}
                 </Dialog.Title>
                 <button
-                  className="rounded p-1 text-gray-500 hover:bg-gray-100"
                   onClick={onClose}
+                  className="rounded p-1 text-gray-500 hover:bg-gray-100"
                 >
                   <XMarkIcon className="h-5 w-5" />
                 </button>
               </div>
 
-              {/* ───── Body ───── */}
+              {/* ---------- Body ---------- */}
               <div
                 className="
-                  grid gap-6 p-6
-                  md:grid-cols-2                        /* split desde md */
-                  overflow-y-auto                       /* scroll interno */
+                  grid gap-6 overflow-y-auto p-6
+                  md:grid-cols-2                    /* 1 col → xs-sm | 2 col → ≥ md */
                 "
               >
-                {/* ─── Imagen ─── */}
+                {/* ----- Imagen ----- */}
                 <div className="flex items-center justify-center">
                   <LazyImage
                     src={imgSrc}
                     alt={item.name}
                     className="
                       w-full rounded-lg object-contain
-                      max-h-[60vh]                       /* ≤ 60 % pantalla */
+                      max-h-[60vh]                 /* nunca se sale de la viewport */
                     "
                   />
                 </div>
 
-                {/* ─── Info ─── */}
+                {/* ----- Info ----- */}
                 <div className="flex flex-col gap-4">
-                  {/* precio */}
+                  {/* Precio */}
                   <p className="text-2xl font-bold text-brand">
                     {item.price_per_h.toFixed(2)} €/h
                   </p>
 
-                  {/* rating DEMO */}
+                  {/* Rating (demo) */}
                   <div className="flex items-center gap-1">
                     {Array.from({ length: 5 }).map((_, i) => (
                       <StarIcon
@@ -1659,7 +1723,7 @@ export default function QuickViewModal({ open, onClose, item }: Props) {
                     <span className="ml-1 text-sm text-gray-500">(4,0)</span>
                   </div>
 
-                  {/* descripción */}
+                  {/* Descripción */}
                   {item.description ? (
                     <p className="prose max-w-none text-sm leading-relaxed">
                       {item.description}
@@ -1668,8 +1732,8 @@ export default function QuickViewModal({ open, onClose, item }: Props) {
                     <p className="text-sm text-gray-500">Sin descripción.</p>
                   )}
 
-                  {/* categorías */}
-                  {item.categories?.length && (
+                  {/* Categorías */}
+                  {item.categories?.length ? (
                     <div className="flex flex-wrap gap-2">
                       {item.categories.map(c => (
                         <span
@@ -1680,7 +1744,7 @@ export default function QuickViewModal({ open, onClose, item }: Props) {
                         </span>
                       ))}
                     </div>
-                  )}
+                  ) : null}
 
                   {/* CTA */}
                   <button className="btn mt-auto w-full">Reservar ahora</button>

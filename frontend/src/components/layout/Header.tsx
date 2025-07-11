@@ -1,18 +1,28 @@
+// src/components/layout/Header.tsx
 import { Link, NavLink } from 'react-router-dom';
+import logo from '../../assets/logo.png';
 import { useAuth } from '../../hooks/useAuth';
-import { Bars3Icon } from '@heroicons/react/24/outline';
 
 export default function Header() {
   const { token, logout } = useAuth();
+
   return (
     <header className="sticky top-0 z-30 bg-white/80 backdrop-blur shadow-sm">
-      <div className="container flex h-14 items-center gap-6">
-        <Link to="/" className="flex items-center gap-1 text-lg font-bold text-brand">
-          <Bars3Icon className="h-6 w-6" />
-          Rental‑MVP
+      {/* ↑ duplica el padding vertical para más “aire” */}
+      <div className="container flex items-center gap-8 py-4 lg:py-6">
+        {/* Logo */}
+        <Link to="/" aria-label="Inicio" className="flex items-center">
+          {/* será ≈96 px en desktop */}
+          <img
+            src={logo}
+            alt="Logo Rental-MVP"
+            className="h-14 md:h-20 lg:h-24 w-auto select-none"
+            decoding="async"
+          />
         </Link>
 
-        <nav className="ml-auto flex gap-6 text-sm font-semibold text-gray-600">
+        {/* Navegación */}
+        <nav className="ml-auto flex gap-8 text-base font-semibold text-gray-600">
           {token ? (
             <>
               <NavLink to="/dashboard" className="hover:text-gray-900">
