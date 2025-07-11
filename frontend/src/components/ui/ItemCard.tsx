@@ -1,10 +1,14 @@
+/* -------------------------------------------------------------------------- */
+/*  src/components/ui/ItemCard.tsx                                            */
+/* -------------------------------------------------------------------------- */
 import { useState } from 'react';
-import { Item } from '../../features/items/useItems';
-import LazyImage from './LazyImage';
-import { resolveImage } from '../../utils';
-import QuickViewModal from './QuickViewModal';
-import clsx from 'clsx';
 import { HeartIcon, EyeIcon } from '@heroicons/react/24/solid';
+import clsx from 'clsx';
+
+import { Item } from '../../features/items/useItems';
+import { resolveImage } from '../../utils';
+import LazyImage from './LazyImage';
+import ItemDetailModal from './ItemDetailModal';
 
 export default function ItemCard({ item }: { item: Item }) {
   const [open, setOpen] = useState(false);
@@ -14,11 +18,13 @@ export default function ItemCard({ item }: { item: Item }) {
     `https://source.unsplash.com/640x480/?${encodeURIComponent(item.name)}`
   );
 
+  /* -------------------------------------------------- */
   return (
     <>
       <article
+        onClick={() => setOpen(true)}
         className="
-          flex flex-col overflow-hidden rounded-lg bg-surface shadow-card
+          flex cursor-pointer flex-col overflow-hidden rounded-lg bg-surface shadow-card
           transition-transform duration-200 hover:-translate-y-1 hover:shadow-cardHover
         "
       >
@@ -28,7 +34,6 @@ export default function ItemCard({ item }: { item: Item }) {
             src={imgSrc}
             alt={item.name}
             className="aspect-[4/3] w-full object-contain p-2"
-            onClick={() => setOpen(true)}
           />
 
           {!item.available && (
@@ -37,8 +42,9 @@ export default function ItemCard({ item }: { item: Item }) {
             </span>
           )}
 
+          {/* acciones rápidas */}
           <div className="absolute inset-0 flex items-start justify-end gap-2 p-2 opacity-0 transition-opacity hover:opacity-100">
-            <IconBtn title="Vista rápida" onClick={() => setOpen(true)}>
+            <IconBtn title="Vista rápida">
               <EyeIcon className="h-5 w-5" />
             </IconBtn>
             <IconBtn title="Favorito">
@@ -73,28 +79,27 @@ export default function ItemCard({ item }: { item: Item }) {
         </div>
       </article>
 
-      <QuickViewModal open={open} onClose={() => setOpen(false)} item={item} />
+      {/* ---------- Modal de detalle ---------- */}
+      <ItemDetailModal open={open} onClose={() => setOpen(false)} item={item} />
     </>
   );
 }
 
+/* -------------------------------------------------------------------------- */
+/*                                 Helpers                                    */
+/* -------------------------------------------------------------------------- */
 function IconBtn({
   children,
-  onClick,
   title,
 }: {
   children: React.ReactNode;
-  onClick?: () => void;
   title: string;
 }) {
   return (
     <button
       type="button"
       title={title}
-      onClick={e => {
-        e.stopPropagation();
-        onClick?.();
-      }}
+      onClick={e => e.stopPropagation()}
       className="rounded-full bg-white/90 p-1 text-gray-600 shadow transition-colors hover:bg-white"
     >
       {children}
