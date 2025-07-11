@@ -8,13 +8,13 @@ services:
     env_file: .env
     volumes:
       - uploads:/app/uploads          # imágenes persisten
-      - ./rental.db:/app/rental.db    # sqlite fuera de imagen
+      - ./rental.db:/app/rental.db    # sqlite fuera de la imagen
     restart: unless-stopped
 
   frontend:
     build:
-      context: .
-      dockerfile: frontend/Dockerfile
+      context: ./frontend             # ← nuevo contexto
+      dockerfile: Dockerfile          # (vive dentro de frontend/)
     depends_on:
       - backend
     ports:
