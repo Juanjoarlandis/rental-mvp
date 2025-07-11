@@ -25,7 +25,7 @@ export default function FiltersSidebar({ value, onChange, onReset }: Props) {
   };
 
   return (
-    <aside className="w-full max-w-xs space-y-6 md:w-60 lg:w-72">
+    <div className="space-y-6 w-full md:w-60 lg:w-72">
       {/* Search */}
       <input
         placeholder="Buscar…"
@@ -121,10 +121,9 @@ export default function FiltersSidebar({ value, onChange, onReset }: Props) {
         <option value="name">Nombre</option>
       </select>
 
-      {/* Reset */}
       <button onClick={onReset} className="btn--ghost w-full">
         Limpiar filtros
       </button>
-    </aside>
+    </div>
   );
 }

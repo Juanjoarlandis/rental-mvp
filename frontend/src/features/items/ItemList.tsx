@@ -7,6 +7,7 @@ import FiltersSidebar from '../../components/filters/FiltersSidebar';
 import { useItems } from './useItems';
 import { useAuth } from '../../hooks/useAuth';
 import AddItemModal from './AddItemModal';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
 type FiltersT = {
   name?: string;
@@ -17,7 +18,7 @@ type FiltersT = {
 };
 
 export default function ItemList() {
-  /* ------------------------------ filtros ------------------------------ */
+  /* ---------------- Filtros ---------------- */
   const [filters, setFilters] = useState<FiltersT>({});
   const params = useMemo(() => {
     const p = new URLSearchParams();
@@ -26,7 +27,6 @@ export default function ItemList() {
       if (Array.isArray(v)) v.forEach(val => p.append(k, String(val)));
       else p.set(k, String(v));
     });
-    // orden
     if (filters.order) {
       const [field, dir] = filters.order.split('_');
       p.set('order_by', field === 'price' ? 'price' : 'name');
@@ -38,14 +38,17 @@ export default function ItemList() {
   const { data: items, loading, refetch } = useItems(params);
   const { token } = useAuth();
 
-  /* ----------------------- infinite scroll demo ----------------------- */
+  /* ------------- Drawer móvil -------------- */
+  const [openFilters, setOpenFilters] = useState(false);
+
+  /* ------------- Infinite demo ------------- */
   const sentinel = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!sentinel.current) return;
     const ob = new IntersectionObserver(
-      entries => {
-        if (entries[0].isIntersecting && !loading) {
-          // aquí podrías aumentar skip y llamar a refetch, si tu API lo soporta
+      e => {
+        if (e[0].isIntersecting && !loading) {
+          /* paginación futura */
         }
       },
       { rootMargin: '600px' }
@@ -54,36 +57,59 @@ export default function ItemList() {
     return () => ob.disconnect();
   }, [loading]);
 
-  /* ---------------------- modal de nuevo ítem ------------------------- */
-  const [open, setOpen] = useState(false);
+  /* -------------- Modal add ---------------- */
+  const [addOpen, setAddOpen] = useState(false);
 
-  /* demo rápido original (se mantiene oculto) --------------------------- */
-  async function handleAdd(name: string, price: number) {
-    if (!token) return;
-    await axios.post(
-      '/api/items/',
-      { name, price_per_h: price },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    refetch();
-  }
-
+  /* ---------------- Render ----------------- */
   return (
     <Container>
-      <div className="flex gap-10">
-        {/* -------- Sidebar -------- */}
-        <FiltersSidebar
-          value={filters}
-          onChange={setFilters}
-          onReset={() => setFilters({})}
+      {/* ------ Botón filtros sólo móvil ------ */}
+      <button
+        onClick={() => setOpenFilters(true)}
+        className="btn mb-4 md:hidden"
+      >
+        <Bars3Icon className="h-5 w-5 mr-2" />
+        Filtros
+      </button>
+
+      <div className="flex gap-10 md:flex-row flex-col">
+        {/* -------- Sidebar (off-canvas en móvil) -------- */}
+        <div
+          className={`
+            fixed inset-0 z-40 bg-black/40 backdrop-blur-sm
+            transition-opacity md:hidden
+            ${openFilters ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
+          `}
+          onClick={() => setOpenFilters(false)}
         />
+
+        <aside
+          className={`
+            fixed left-0 top-0 z-50 h-full w-72 bg-white p-6 shadow-xl
+            transition-transform md:static md:translate-x-0 md:h-auto md:w-auto md:bg-transparent md:shadow-none
+            ${openFilters ? 'translate-x-0' : '-translate-x-full'}
+          `}
+        >
+          {/* cierre móvil */}
+          <button
+            className="mb-4 md:hidden"
+            onClick={() => setOpenFilters(false)}
+          >
+            <XMarkIcon className="h-6 w-6" />
+          </button>
+
+          <FiltersSidebar
+            value={filters}
+            onChange={setFilters}
+            onReset={() => setFilters({})}
+          />
+        </aside>
 
         {/* -------- Listado -------- */}
         <section className="flex-1">
-          {/* botón añadir */}
           {token && (
             <div className="flex justify-end">
-              <button className="btn mb-4" onClick={() => setOpen(true)}>
+              <button className="btn mb-4" onClick={() => setAddOpen(true)}>
                 Añadir producto
               </button>
             </div>
@@ -96,7 +122,6 @@ export default function ItemList() {
               {items.map(it => (
                 <ItemCard key={it.id} item={it} />
               ))}
-              {/* sentinel */}
               <div ref={sentinel} />
             </Grid>
           )}
@@ -109,31 +134,23 @@ export default function ItemList() {
         </section>
       </div>
 
-      {/* modal */}
-      <AddItemModal
-        open={open}
-        onClose={() => setOpen(false)}
-        onCreated={refetch}
-      />
+      <AddItemModal open={addOpen} onClose={() => setAddOpen(false)} onCreated={refetch} />
     </Container>
   );
 }
 
-/* ---------- helpers ---------- */
+/* ---------------- Helpers ---------------- */
 const Grid = ({ children }: { children: React.ReactNode }) => (
   <div
-    /* columnas exactas de 15 rem, centradas */
-    className="mx-auto grid justify-center gap-6 py-6
-               [grid-template-columns:repeat(auto-fill,15rem)]"
+    className="
+      grid gap-6 py-6
+      [grid-template-columns:repeat(auto-fill,minmax(12rem,1fr))]
+    "
   >
     {children}
   </div>
 );
 
 const GridSkeleton = () => (
-  <Grid>
-    {Array.from({ length: 8 }).map((_, i) => (
-      <SkeletonCard key={i} />
-    ))}
-  </Grid>
+  <Grid>{Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)}</Grid>
 );

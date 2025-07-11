@@ -17,18 +17,18 @@ export default function ItemCard({ item }: { item: Item }) {
   return (
     <>
       <article
-        /* 15 rem fijos; el grid ya no la hará crecer */
-        className="group w-[15rem] flex flex-col overflow-hidden
-                   rounded-lg bg-surface shadow-card transition-transform
-                   duration-200 hover:-translate-y-1 hover:shadow-cardHover"
+        className="
+          flex flex-col overflow-hidden rounded-lg bg-surface shadow-card
+          transition-transform duration-200 hover:-translate-y-1 hover:shadow-cardHover
+        "
       >
-        {/* ─────── Foto ─────── */}
+        {/* ---------- Foto ---------- */}
         <div className="relative">
           <LazyImage
             src={imgSrc}
             alt={item.name}
-            /* object-contain ⇒ nunca se sale; p-2 añade “aire” */
             className="aspect-[4/3] w-full object-contain p-2"
+            onClick={() => setOpen(true)}
           />
 
           {!item.available && (
@@ -37,7 +37,7 @@ export default function ItemCard({ item }: { item: Item }) {
             </span>
           )}
 
-          <div className="absolute inset-0 flex items-start justify-end gap-2 p-2 opacity-0 transition-opacity group-hover:opacity-100">
+          <div className="absolute inset-0 flex items-start justify-end gap-2 p-2 opacity-0 transition-opacity hover:opacity-100">
             <IconBtn title="Vista rápida" onClick={() => setOpen(true)}>
               <EyeIcon className="h-5 w-5" />
             </IconBtn>
@@ -47,11 +47,9 @@ export default function ItemCard({ item }: { item: Item }) {
           </div>
         </div>
 
-        {/* ─────── Info ─────── */}
+        {/* ---------- Info ---------- */}
         <div className="flex flex-1 flex-col gap-2 px-4 pb-4">
-          <h3 className="line-clamp-1 text-lg font-semibold text-gray-900">
-            {item.name}
-          </h3>
+          <h3 className="line-clamp-1 text-lg font-semibold">{item.name}</h3>
 
           {item.description && (
             <p className="line-clamp-2 text-sm text-gray-600">
@@ -83,7 +81,7 @@ export default function ItemCard({ item }: { item: Item }) {
 function IconBtn({
   children,
   onClick,
-  title
+  title,
 }: {
   children: React.ReactNode;
   onClick?: () => void;
