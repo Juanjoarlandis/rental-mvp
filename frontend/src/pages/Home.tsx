@@ -1,13 +1,43 @@
+/* -------------------------------------------------------------------------- */
+/*  src/pages/Home.tsx                                                        */
+/* -------------------------------------------------------------------------- */
 import { Link } from 'react-router-dom';
-import { ArrowRightIcon, PlusIcon } from '@heroicons/react/24/solid';
+import {
+  ArrowRightIcon,
+  PlusIcon,
+  CloudArrowUpIcon,
+  CalendarDaysIcon,
+  BanknotesIcon,
+} from '@heroicons/react/24/solid';
+
 import Container from '../components/shared/Container';
 import Section from '../components/shared/Section';
+
 import Stats from '../components/Home/Stats';
 import LogoCloud from '../components/Home/LogoCloud';
 import Testimonials from '../components/Home/Testimonials';
 import FAQ from '../components/Home/FAQ';
 
 export default function Home() {
+  /* Pasos del “cómo funciona” con su icono */
+  const STEPS = [
+    {
+      title: 'Publica',
+      desc: 'Sube tu producto, ponle precio y límites de uso.',
+      icon: CloudArrowUpIcon,
+    },
+    {
+      title: 'Reserva',
+      desc: 'Los usuarios pagan la fianza y reservan al instante.',
+      icon: CalendarDaysIcon,
+    },
+    {
+      title: 'Gana',
+      desc: 'Entregas el ítem, recibes el pago y valoraciones ⭐',
+      icon: BanknotesIcon,
+    },
+  ];
+
   return (
     <>
       {/* ---------- HERO ---------- */}
@@ -38,6 +68,19 @@ export default function Home() {
             </div>
           </div>
         </Container>
+
+        {/* wave separator */}
+        <svg
+          aria-hidden
+          viewBox="0 0 1440 120"
+          className="block w-full text-brand"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M0,96L48,106.7C96,117,192,139,288,128C384,117,480,75,576,58.7C672,43,768,53,864,74.7C960,96,1056,128,1152,138.7C1248,149,1344,139,1392,133.3L1440,128L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"
+            className="fill-white"
+          />
+        </svg>
       </section>
 
       {/* ---------- STATS ---------- */}
@@ -50,15 +93,13 @@ export default function Home() {
       <Section title="¿Cómo funciona?">
         <Container>
           <div className="grid gap-12 md:grid-cols-3">
-            {[
-              ['Publica', 'Sube tu producto, ponle precio y límites de uso.'],
-              ['Reserva', 'Los usuarios pagan la fianza y reservan al instante.'],
-              ['Gana', 'Entregas el ítem, recibes el pago y valoraciones ⭐'],
-            ].map(([t, d]) => (
-              <div key={t} className="space-y-3 text-center">
-                <div className="mx-auto h-14 w-14 rounded-full bg-brand/10" />
-                <h3 className="text-xl font-semibold">{t}</h3>
-                <p className="text-gray-600">{d}</p>
+            {STEPS.map(({ title, desc, icon: Icon }) => (
+              <div key={title} className="space-y-4 text-center">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brand/10">
+                  <Icon className="h-6 w-6 text-brand" />
+                </div>
+                <h3 className="text-xl font-semibold">{title}</h3>
+                <p className="text-gray-600">{desc}</p>
               </div>
             ))}
           </div>
