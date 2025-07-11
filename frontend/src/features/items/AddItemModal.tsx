@@ -1,13 +1,17 @@
+/* -------------------------------------------------------------------------- */
+/*  src/features/items/AddItemModal.tsx                                       */
+/* -------------------------------------------------------------------------- */
 import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon, PhotoIcon } from "@heroicons/react/24/outline";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import toast from "react-hot-toast";
+
 import useCategories, { Category } from "../categories/useCategories";
 import { useAuth } from "../../hooks/useAuth";
+import { api } from "../../api";
 
 /* -------------------------------------------------------------------------- */
 /*                               schema + types                               */
@@ -38,6 +42,8 @@ type Props = {
 };
 
 /* -------------------------------------------------------------------------- */
+/*                           Componente principal                             */
+/* -------------------------------------------------------------------------- */
 
 export default function AddItemModal({ open, onClose, onCreated }: Props) {
   const { data: cats } = useCategories();
@@ -55,7 +61,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
     defaultValues: { categories: [] }
   });
 
-  /* preview de imagen ------------------------------------------------------ */
+  /* --------------------------- preview de imagen -------------------------- */
   const file = watch("image");
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -68,7 +74,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
     setPreview(null);
   }, [file]);
 
-  /* submit ----------------------------------------------------------------- */
+  /* ------------------------------- submit --------------------------------- */
   async function onSubmit(data: FormData) {
     if (!token) {
       toast.error("Debes haber iniciado sesión");
@@ -80,31 +86,24 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
       if (data.image) {
         const fd = new FormData();
         fd.append("file", data.image);
-        const up = await axios.post<{ url: string }>("/api/upload/", fd, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data"
-          }
+        const up = await api.post<{ url: string }>("/upload/", fd, {
+          headers: { "Content-Type": "multipart/form-data" }
         });
         image_url = up.data.url;
       }
 
       /* 2.- creamos ítem */
-      await axios.post(
-        "/api/items/",
-        {
-          name: data.name,
-          description: data.description,
-          price_per_h: data.price_per_h,
-          categories: data.categories,
-          image_url
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await api.post("/items/", {
+        name: data.name,
+        description: data.description,
+        price_per_h: data.price_per_h,
+        categories: data.categories,
+        image_url
+      });
 
       toast.success("¡Producto publicado!");
       reset();          // limpia formulario
-      onCreated();      // refresca lista en parent
+      onCreated();      // refresca listado en el padre
       onClose();        // cierra modal
     } catch (err: any) {
       console.error(err);
@@ -112,7 +111,9 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
     }
   }
 
-  /* interfaz ---------------------------------------------------------------- */
+  /* ------------------------------------------------------------------------ */
+  /*                                 UI                                       */
+  /* ------------------------------------------------------------------------ */
 
   return (
     <Transition show={open} as={Fragment}>
@@ -123,7 +124,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
         }}
         className="relative z-50"
       >
-        {/* backdrop */}
+        {/* ---------- Backdrop ---------- */}
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-200"
@@ -136,7 +137,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
           <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
         </Transition.Child>
 
-        {/* panel */}
+        {/* ---------- Panel ---------- */}
         <div className="fixed inset-0 grid place-items-center p-4">
           <Transition.Child
             as={Fragment}
@@ -147,13 +148,14 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
             leaveFrom="scale-100 opacity-100"
             leaveTo="scale-95 opacity-0"
           >
-            <Dialog.Panel className="max-w-2xl w-full overflow-hidden rounded-xl bg-white shadow-xl">
-              {/* header */}
+            <Dialog.Panel className="w-full max-w-2xl overflow-hidden rounded-xl bg-white shadow-xl">
+              {/* Header */}
               <div className="flex items-center justify-between border-b px-6 py-4">
                 <Dialog.Title className="text-lg font-semibold">
                   Nuevo producto
                 </Dialog.Title>
                 <button
+                  type="button"
                   className="rounded p-1 text-gray-500 hover:bg-gray-100"
                   onClick={() => {
                     reset();
@@ -164,13 +166,14 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
                 </button>
               </div>
 
-              {/* form */}
+              {/* Form */}
               <form
                 onSubmit={handleSubmit(onSubmit)}
                 className="grid gap-6 px-6 py-8 md:grid-cols-2"
               >
-                {/* ---- columna 1 ---- */}
+                {/* --------------------------- Columna 1 --------------------------- */}
                 <div className="space-y-4">
+                  {/* Nombre */}
                   <div>
                     <label className="block text-sm font-medium">Nombre</label>
                     <input
@@ -185,6 +188,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
                     )}
                   </div>
 
+                  {/* Descripción */}
                   <div>
                     <label className="block text-sm font-medium">
                       Descripción
@@ -202,6 +206,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
                     )}
                   </div>
 
+                  {/* Precio */}
                   <div>
                     <label className="block text-sm font-medium">
                       Precio / hora (€)
@@ -220,9 +225,9 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
                   </div>
                 </div>
 
-                {/* ---- columna 2 ---- */}
+                {/* --------------------------- Columna 2 --------------------------- */}
                 <div className="space-y-4">
-                  {/* imagen ------------------------------------------------ */}
+                  {/* Imagen */}
                   <div>
                     <label className="block text-sm font-medium">Imagen</label>
 
@@ -236,7 +241,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
                       ) : (
                         <span className="flex flex-col items-center gap-1">
                           <PhotoIcon className="h-8 w-8" />
-                          <span>PNG, JPG, máx. 5 MB</span>
+                          <span>PNG, JPG · máx. 5 MB</span>
                         </span>
                       )}
                       <input
@@ -255,7 +260,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
                     )}
                   </div>
 
-                  {/* categorías ------------------------------------------ */}
+                  {/* Categorías */}
                   <div>
                     <p className="mb-1 text-sm font-medium">Categorías</p>
                     <div className="flex flex-wrap gap-2">
@@ -291,7 +296,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
                   </div>
                 </div>
 
-                {/* ---- footer ---- */}
+                {/* Footer */}
                 <div className="md:col-span-2 flex justify-end gap-3">
                   <button
                     type="button"
