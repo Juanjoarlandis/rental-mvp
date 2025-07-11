@@ -129,3 +129,11 @@ const Grid = ({ children }: { children: React.ReactNode }) => (
     {children}
   </div>
 );
+
+const GridSkeleton = () => (
+  <Grid>
+    {Array.from({ length: 8 }).map((_, i) => (
+      <SkeletonCard key={i} />
+    ))}
+  </Grid>
+);
