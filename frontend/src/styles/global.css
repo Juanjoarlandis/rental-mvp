@@ -1,0 +1,36 @@
+/* frontend/src/styles/global.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ----- BASE ----- */
+@layer base {
+  html { @apply scroll-smooth; }
+  body { @apply bg-gray-50 text-gray-800 antialiased font-sans; }
+}
+
+/* ----- COMPONENTS ----- */
+@layer components {
+  /* Botones */
+  .btn        { @apply inline-flex items-center justify-center rounded-md bg-brand px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-brand-hover disabled:opacity-60; }
+  .btn--ghost { @apply inline-flex items-center justify-center rounded-md border border-brand px-4 py-2 text-sm font-medium text-brand transition-colors hover:bg-brand/5; }
+
+  /* Badges */
+  .badge          { @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium; }
+  .badge--ok      { @apply badge bg-green-100 text-green-800; }
+  .badge--danger  { @apply badge bg-red-100 text-red-800; }
+}
+
+/* ----- UTILITIES PERSONALIZADAS ----- */
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+}
+
+@layer components {
+  .form-select { @apply block w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-brand focus:ring-brand; }
+}
+
+@layer components {
+  .toast-success { @apply bg-green-600 text-white; }
+  .toast-error   { @apply bg-red-600 text-white; }
+}
