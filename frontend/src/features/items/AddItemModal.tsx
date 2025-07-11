@@ -3,7 +3,7 @@
 /* -------------------------------------------------------------------------- */
 import { Fragment, useEffect, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { XMarkIcon, PhotoIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, PhotoIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,6 +17,9 @@ import { api } from '../../api';
 /*                               schema + types                               */
 /* -------------------------------------------------------------------------- */
 
+const MB = 1024 * 1024;
+const MAX_IMAGES = 6;
+
 const priceRegex = /^\d+([.,]\d{1,2})?$/; // hasta 2 decimales
 
 const schema = z.object({
@@ -27,10 +30,14 @@ const schema = z.object({
     .regex(priceRegex, 'Precio inválido')
     .transform(v => Number(v.replace(',', '.'))),
   categories: z.array(z.number()).min(1, 'Selecciona al menos una categoría'),
-  image: z
-    .instanceof(File)
-    .refine(f => f.size < 5 * 1024 * 1024, 'Máx. 5 MB')
-    .optional()
+  images: z
+    .array(
+      z
+        .instanceof(File)
+        .refine(f => f.size <= 5 * MB, 'Cada imagen máx. 5 MB')
+    )
+    .min(1, 'Al menos 1 imagen')
+    .max(MAX_IMAGES, `Máx. ${MAX_IMAGES} imágenes`)
 });
 
 type FormData = z.infer<typeof schema>;
@@ -44,7 +51,6 @@ type Props = {
 /* -------------------------------------------------------------------------- */
 /*                           Componente principal                             */
 /* -------------------------------------------------------------------------- */
-
 export default function AddItemModal({ open, onClose, onCreated }: Props) {
   const { data: cats } = useCategories();
   const { token } = useAuth();
@@ -58,21 +64,18 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
     formState: { errors, isSubmitting }
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { categories: [] }
+    defaultValues: { categories: [], images: [] }
   });
 
-  /* --------------------------- preview de imagen -------------------------- */
-  const file = watch('image');
-  const [preview, setPreview] = useState<string | null>(null);
+  /* --------------------------- previews dinámicos -------------------------- */
+  const files = watch('images'); // File[]
+  const [previews, setPreviews] = useState<string[]>([]);
 
   useEffect(() => {
-    if (file && file instanceof File) {
-      const url = URL.createObjectURL(file);
-      setPreview(url);
-      return () => URL.revokeObjectURL(url);
-    }
-    setPreview(null);
-  }, [file]);
+    const urls = files.map(f => URL.createObjectURL(f));
+    setPreviews(urls);
+    return () => urls.forEach(URL.revokeObjectURL); // cleanup
+  }, [files]);
 
   /* ------------------------------- submit --------------------------------- */
   async function onSubmit(data: FormData) {
@@ -80,16 +83,22 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
       toast.error('Debes haber iniciado sesión');
       return;
     }
+
     try {
-      /* 1.- subimos imagen (opcional) */
-      let image_url: string | undefined;
-      if (data.image) {
-        const fd = new FormData();
-        fd.append('file', data.image);
-        const up = await api.post<{ url: string }>('/upload/', fd, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
-        image_url = up.data.url;
+      /* 1.- subimos imágenes (paralelo) */
+      let image_urls: string[] = [];
+      if (data.images.length) {
+        const uploads = await Promise.all(
+          data.images.map(async img => {
+            const fd = new FormData();
+            fd.append('file', img);
+            const r = await api.post<{ url: string }>('/upload/', fd, {
+              headers: { 'Content-Type': 'multipart/form-data' }
+            });
+            return r.data.url;
+          })
+        );
+        image_urls = uploads;
       }
 
       /* 2.- creamos ítem */
@@ -98,13 +107,13 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
         description: data.description,
         price_per_h: data.price_per_h,
         categories: data.categories,
-        image_url
+        image_urls           // 🔥 ahora array
       });
 
       toast.success('¡Producto publicado!');
-      reset();         // limpia formulario
-      onCreated();     // refresca listado en el padre
-      onClose();       // cierra modal
+      reset();
+      onCreated();
+      onClose();
     } catch (err: any) {
       console.error(err);
       toast.error(err.response?.data?.detail ?? 'Error al crear producto');
@@ -114,7 +123,6 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
   /* ------------------------------------------------------------------------ */
   /*                                   UI                                     */
   /* ------------------------------------------------------------------------ */
-
   return (
     <Transition show={open} as={Fragment}>
       <Dialog
@@ -148,12 +156,9 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
             leaveFrom="scale-100 opacity-100"
             leaveTo="scale-95 opacity-0"
           >
-            {/* -------------------------------------------------------------- */}
-            {/*  Panel: alto máx. 90 vh, flex-col, scroll solo en el body     */}
-            {/* -------------------------------------------------------------- */}
             <Dialog.Panel className="flex w-full max-w-2xl max-h-[90vh] flex-col overflow-x-hidden rounded-xl bg-white shadow-xl">
-              {/* ---------- Header (fijo) ---------- */}
-              <div className="flex items-center justify-between border-b px-6 py-4">
+              {/* ---------- Header ---------- */}
+              <header className="flex items-center justify-between border-b px-6 py-4">
                 <Dialog.Title className="text-lg font-semibold">
                   Nuevo producto
                 </Dialog.Title>
@@ -167,12 +172,12 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
                 >
                   <XMarkIcon className="h-5 w-5" />
                 </button>
-              </div>
+              </header>
 
-              {/* ---------- Formulario (scrollable) ---------- */}
+              {/* ---------- Form (scrollable) ---------- */}
               <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="flex-1 overflow-y-auto px-6 py-8 grid gap-6 md:grid-cols-2"
+                className="grid flex-1 grid-cols-1 gap-6 overflow-y-auto px-6 py-8 md:grid-cols-2"
               >
                 {/* --------------------------- Columna 1 --------------------------- */}
                 <div className="space-y-4">
@@ -230,35 +235,63 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
 
                 {/* --------------------------- Columna 2 --------------------------- */}
                 <div className="space-y-4">
-                  {/* Imagen */}
+                  {/* Imágenes */}
                   <div>
-                    <label className="block text-sm font-medium">Imagen</label>
+                    <label className="block text-sm font-medium">
+                      Imágenes ({files.length}/{MAX_IMAGES})
+                    </label>
 
-                    <label className="mt-1 flex h-48 w-full cursor-pointer items-center justify-center rounded border-2 border-dashed border-gray-300 text-sm text-gray-500 hover:border-brand hover:text-brand">
-                      {preview ? (
-                        <img
-                          src={preview}
-                          alt="preview"
-                          className="h-full w-full object-cover"
-                        />
-                      ) : (
-                        <span className="flex flex-col items-center gap-1">
-                          <PhotoIcon className="h-8 w-8" />
-                          <span>PNG, JPG · máx. 5 MB</span>
-                        </span>
-                      )}
+                    {/* zona de drop / input */}
+                    <label className="mt-1 flex min-h-[4rem] w-full cursor-pointer flex-col items-center justify-center rounded border-2 border-dashed border-gray-300 p-4 text-center text-sm text-gray-500 hover:border-brand hover:text-brand">
+                      <PhotoIcon className="h-8 w-8" />
+                      <span className="mt-1">
+                        PNG, JPG · máx. 5 MB c/u · hasta {MAX_IMAGES}
+                      </span>
                       <input
                         type="file"
                         accept="image/*"
+                        multiple
                         className="sr-only"
                         onChange={e =>
-                          setValue('image', e.target.files?.[0] as File)
+                          setValue(
+                            'images',
+                            [...(e.target.files ?? [])] as File[],
+                            { shouldValidate: true }
+                          )
                         }
                       />
                     </label>
-                    {errors.image && (
-                      <p className="text-xs text-red-600">
-                        {errors.image.message}
+
+                    {/* previews */}
+                    {previews.length > 0 && (
+                      <div className="mt-4 grid grid-cols-3 gap-2">
+                        {previews.map((src, i) => (
+                          <div key={i} className="relative">
+                            <img
+                              src={src}
+                              alt={`preview ${i + 1}`}
+                              className="h-24 w-full rounded object-cover"
+                            />
+                            <button
+                              type="button"
+                              title="Eliminar"
+                              onClick={() => {
+                                const copy = [...files];
+                                copy.splice(i, 1);
+                                setValue('images', copy, { shouldValidate: true });
+                              }}
+                              className="absolute right-0 top-0 rounded-bl bg-black/60 p-0.5 text-white transition-colors hover:bg-black/80"
+                            >
+                              <TrashIcon className="h-4 w-4" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {errors.images && (
+                      <p className="mt-1 text-xs text-red-600">
+                        {errors.images.message as string}
                       </p>
                     )}
                   </div>
@@ -312,7 +345,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
                     Cancelar
                   </button>
                   <button className="btn" disabled={isSubmitting}>
-                    Publicar
+                    {isSubmitting ? 'Publicando…' : 'Publicar'}
                   </button>
                 </div>
               </form>

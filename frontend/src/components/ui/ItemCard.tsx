@@ -1,32 +1,31 @@
 /* -------------------------------------------------------------------------- */
 /*  src/components/ui/ItemCard.tsx                                            */
 /* -------------------------------------------------------------------------- */
-import { useState } from 'react';
-import { HeartIcon, EyeIcon } from '@heroicons/react/24/solid';
-import clsx from 'clsx';
+import { useState } from "react";
+import { HeartIcon, EyeIcon } from "@heroicons/react/24/solid";
+import clsx from "clsx";
 
-import { Item } from '../../features/items/useItems';
-import { resolveImage } from '../../utils';
-import LazyImage from './LazyImage';
-import ItemDetailModal from './ItemDetailModal';
+import { Item } from "../../features/items/useItems";
+import { resolveImage } from "../../utils";
+import LazyImage from "./LazyImage";
+import ItemDetailModal from "./ItemDetailModal";
 
 export default function ItemCard({ item }: { item: Item }) {
   const [open, setOpen] = useState(false);
 
+  /* -------- portada (1ª del array o la legacy) -------- */
+  const cover = item.image_urls?.[0] ?? item.image_url;
+
   const imgSrc = resolveImage(
-    item.image_url,
+    cover,
     `https://source.unsplash.com/640x480/?${encodeURIComponent(item.name)}`
   );
 
-  /* -------------------------------------------------- */
   return (
     <>
       <article
         onClick={() => setOpen(true)}
-        className="
-          flex cursor-pointer flex-col overflow-hidden rounded-lg bg-surface shadow-card
-          transition-transform duration-200 hover:-translate-y-1 hover:shadow-cardHover
-        "
+        className="flex cursor-pointer flex-col overflow-hidden rounded-lg bg-surface shadow-card transition-transform duration-200 hover:-translate-y-1 hover:shadow-cardHover"
       >
         {/* ---------- Foto ---------- */}
         <div className="relative">
@@ -69,11 +68,11 @@ export default function ItemCard({ item }: { item: Item }) {
             </p>
             <span
               className={clsx(
-                'badge',
-                item.available ? 'badge--ok' : 'badge--danger'
+                "badge",
+                item.available ? "badge--ok" : "badge--danger"
               )}
             >
-              {item.available ? 'Disponible' : 'Alquilado'}
+              {item.available ? "Disponible" : "Alquilado"}
             </span>
           </div>
         </div>
@@ -90,7 +89,7 @@ export default function ItemCard({ item }: { item: Item }) {
 /* -------------------------------------------------------------------------- */
 function IconBtn({
   children,
-  title,
+  title
 }: {
   children: React.ReactNode;
   title: string;

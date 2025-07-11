@@ -1,18 +1,18 @@
 /* -------------------------------------------------------------------------- */
 /*  src/components/ui/ItemDetailModal.tsx                                     */
 /* -------------------------------------------------------------------------- */
-import { Fragment, useState } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
+import { Fragment, useState } from "react";
+import { Dialog, Transition } from "@headlessui/react";
 import {
   XMarkIcon,
   StarIcon,
   ShieldCheckIcon,
-  ClockIcon,
-} from '@heroicons/react/24/outline';
-import { Item } from '../../features/items/useItems';
-import { resolveImage } from '../../utils';
-import LazyImage from './LazyImage';
-import clsx from 'clsx';
+  ClockIcon
+} from "@heroicons/react/24/outline";
+import { Item } from "../../features/items/useItems";
+import { resolveImage } from "../../utils";
+import LazyImage from "./LazyImage";
+import clsx from "clsx";
 
 type Props = {
   open: boolean;
@@ -23,19 +23,18 @@ type Props = {
 export default function ItemDetailModal({ open, onClose, item }: Props) {
   if (!item) return null;
 
-  /* ------- galería: imagen principal + 3 secundarias “falsas” -------- */
-  const gallery = [
-    resolveImage(
-      item.image_url,
-      `https://source.unsplash.com/800x600/?${encodeURIComponent(item.name)}`
-    ),
-    ...Array.from({ length: 3 }).map(
-      (_, i) =>
-        `https://source.unsplash.com/800x60${i}/?${encodeURIComponent(
-          item.name
-        )}`
-    ),
-  ];
+  /* ---------- galería: imágenes reales o fallback ---------- */
+  const gallery =
+    item.image_urls && item.image_urls.length
+      ? item.image_urls
+      : [
+          resolveImage(
+            item.image_url,
+            `https://source.unsplash.com/800x600/?${encodeURIComponent(
+              item.name
+            )}`
+          )
+        ];
 
   const [active, setActive] = useState(0);
 
@@ -67,7 +66,7 @@ export default function ItemDetailModal({ open, onClose, item }: Props) {
             leaveTo="scale-95 opacity-0"
           >
             <Dialog.Panel className="flex w-full max-w-5xl max-h-[95vh] flex-col overflow-hidden rounded-xl bg-white shadow-xl">
-              {/* ---------------- Header fijo ---------------- */}
+              {/* ---------------- Header ---------------- */}
               <header className="flex items-center justify-between border-b px-6 py-4">
                 <Dialog.Title className="text-lg font-semibold">
                   {item.name}
@@ -80,7 +79,7 @@ export default function ItemDetailModal({ open, onClose, item }: Props) {
                 </button>
               </header>
 
-              {/* ---------------- Body scrollable ---------------- */}
+              {/* ---------------- Body ---------------- */}
               <section className="flex flex-1 flex-col gap-8 overflow-y-auto p-6 md:flex-row">
                 {/* ---------- Galería ---------- */}
                 <div className="md:w-1/2">
@@ -94,26 +93,28 @@ export default function ItemDetailModal({ open, onClose, item }: Props) {
                     />
                   </div>
 
-                  {/* thumbs */}
-                  <div className="mt-4 flex gap-2 overflow-x-auto">
-                    {gallery.map((src, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setActive(i)}
-                        className={clsx(
-                          'shrink-0 overflow-hidden rounded-md border',
-                          active === i && 'ring-2 ring-brand'
-                        )}
-                      >
-                        <LazyImage
-                          src={src}
-                          alt=""
-                          className="h-16 w-24 object-cover"
-                          sizes="96px"
-                        />
-                      </button>
-                    ))}
-                  </div>
+                  {/* thumbnails */}
+                  {gallery.length > 1 && (
+                    <div className="mt-4 flex gap-2 overflow-x-auto">
+                      {gallery.map((src, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setActive(i)}
+                          className={clsx(
+                            "shrink-0 overflow-hidden rounded-md border",
+                            active === i && "ring-2 ring-brand"
+                          )}
+                        >
+                          <LazyImage
+                            src={src}
+                            alt=""
+                            className="h-16 w-24 object-cover"
+                            sizes="96px"
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* ---------- Ficha ---------- */}
@@ -162,44 +163,8 @@ export default function ItemDetailModal({ open, onClose, item }: Props) {
                   <button className="btn mt-auto w-full md:max-w-xs">
                     Reservar ahora
                   </button>
-
-                  {/* dueño (demo) */}
-                  <div className="mt-6 flex items-center gap-3">
-                    <img
-                      src="https://source.unsplash.com/48x48/?face"
-                      alt=""
-                      className="h-12 w-12 rounded-full object-cover"
-                    />
-                    <div>
-                      <p className="text-sm font-semibold">Ana G.</p>
-                      <p className="text-xs text-gray-500">Usuario verificado</p>
-                    </div>
-                  </div>
                 </div>
               </section>
-
-              {/* ---------------- Reviews (demo) ---------------- */}
-              <footer className="border-t bg-gray-50 px-6 py-4">
-                <h3 className="mb-4 font-semibold">Últimas valoraciones</h3>
-                <ul className="space-y-3 text-sm">
-                  {[
-                    ['Pedro', 'Todo perfecto, muy puntual.'],
-                    ['Lucía', 'La máquina estaba impecable, repetiré.'],
-                  ].map(([name, comment]) => (
-                    <li key={name} className="flex gap-3">
-                      <img
-                        src="https://source.unsplash.com/32x32/?person"
-                        alt=""
-                        className="h-8 w-8 rounded-full object-cover"
-                      />
-                      <div>
-                        <p className="font-medium">{name}</p>
-                        <p className="text-gray-600">{comment}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </footer>
             </Dialog.Panel>
           </Transition.Child>
         </div>
@@ -211,7 +176,6 @@ export default function ItemDetailModal({ open, onClose, item }: Props) {
 /* -------------------------------------------------------------------------- */
 /*                                 Helpers                                    */
 /* -------------------------------------------------------------------------- */
-
 function Rating({ value }: { value: number }) {
   return (
     <div className="flex items-center gap-1">
@@ -219,19 +183,21 @@ function Rating({ value }: { value: number }) {
         <StarIcon
           key={i}
           className={clsx(
-            'h-5 w-5',
-            i < value ? 'fill-amber-400 stroke-amber-400' : 'stroke-gray-300'
+            "h-5 w-5",
+            i < value ? "fill-amber-400 stroke-amber-400" : "stroke-gray-300"
           )}
         />
       ))}
-      <span className="ml-1 text-xs text-gray-500">({value.toFixed(1)})</span>
+      <span className="ml-1 text-xs text-gray-500">
+        ({value.toFixed(1)})
+      </span>
     </div>
   );
 }
 
 function Feature({
   icon: Icon,
-  text,
+  text
 }: {
   icon: (props: any) => JSX.Element;
   text: string;

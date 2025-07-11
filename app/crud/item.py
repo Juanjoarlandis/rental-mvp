@@ -3,15 +3,13 @@ from __future__ import annotations
 
 from typing import List, Optional, Tuple
 
-from sqlalchemy import or_, asc, desc
+from sqlalchemy import asc, desc, or_
 from sqlalchemy.orm import Session, joinedload
 
-from app.models.models import Category, Item
+from app.models.models import Category, Item, ItemImage
 from app.schemas.item import ItemCreate, ItemUpdate
 
 # ───────────────────────── helpers privados ────────────────────────────────
-
-
 def _get_categories_or_400(db: Session, ids: list[int]) -> list[Category]:
     """
     Devuelve la lista de categorías cuyo id esté en *ids* o lanza ValueError
@@ -39,18 +37,17 @@ def _apply_ordering(query, order_by: str | None, order_dir: str | None):
         "id": Item.id,  # comodín por si acaso
     }
     column = mapping.get(order_by, Item.id)
-    query = query.order_by(asc(column) if order_dir == "asc" else desc(column))
-    return query
+    return query.order_by(asc(column) if order_dir == "asc" else desc(column))
 
 
 # ─────────────────────────────── Lectura ────────────────────────────────────
-
-
 def get_item(db: Session, item_id: int) -> Optional[Item]:
-    """Obtiene un ítem por id (con categorías pre-cargadas)."""
+    """
+    Obtiene un ítem por id con categorías **y todas sus imágenes** pre-cargadas.
+    """
     return (
         db.query(Item)
-        .options(joinedload(Item.categories))
+        .options(joinedload(Item.categories), joinedload(Item.images))
         .filter(Item.id == item_id)
         .first()
     )
@@ -70,7 +67,7 @@ def _build_items_query(
     """
     Crea la consulta base aplicando filtros dinámicos y la ordenación.
     """
-    q = db.query(Item).options(joinedload(Item.categories))
+    q = db.query(Item).options(joinedload(Item.categories), joinedload(Item.images))
 
     # ── filtros texto / rango precio / disponibilidad ──────────────────────
     if name:
@@ -91,9 +88,7 @@ def _build_items_query(
         q = q.filter(Item.categories.any(Category.id.in_(categories)))
 
     # ── ordenación ─────────────────────────────────────────────────────────
-    q = _apply_ordering(q, order_by, order_dir)
-
-    return q
+    return _apply_ordering(q, order_by, order_dir)
 
 
 def get_items(
@@ -130,30 +125,38 @@ def get_items(
 
 def get_items_by_owner(db: Session, owner_id: int) -> List[Item]:
     """
-    Lista todos los ítems propiedad de *owner_id* (con categorías).
+    Lista todos los ítems propiedad de *owner_id* con categorías e imágenes.
     """
     return (
         db.query(Item)
-        .options(joinedload(Item.categories))
+        .options(joinedload(Item.categories), joinedload(Item.images))
         .filter(Item.owner_id == owner_id)
         .all()
     )
 
 
 # ─────────────────────────────── Escritura ──────────────────────────────────
-
-
 def create_item(db: Session, item_in: ItemCreate, owner_id: int) -> Item:
     """
-    Crea un ítem y lo asocia al usuario *owner_id*.
+    Crea un ítem, vincula categorías e **inserta todas las imágenes**.
     """
+    # la primera imagen se guarda también en el campo legacy `image_url`
+    main = str(item_in.image_urls[0])
+
     db_item = Item(
-        **item_in.model_dump(exclude={"categories"}),
+        name=item_in.name,
+        description=item_in.description,
+        price_per_h=item_in.price_per_h,
+        image_url=main,
         owner_id=owner_id,
     )
 
+    # categorías
     if item_in.categories:
         db_item.categories = _get_categories_or_400(db, item_in.categories)
+
+    # imágenes (tabla hija)
+    db_item.images = [ItemImage(url=str(url)) for url in item_in.image_urls]
 
     db.add(db_item)
     db.commit()
@@ -164,13 +167,20 @@ def create_item(db: Session, item_in: ItemCreate, owner_id: int) -> Item:
 def update_item(db: Session, item: Item, item_in: ItemUpdate) -> Item:
     """
     Actualiza los campos presentes en *item_in* (PATCH).
+    Si se envían nuevas `image_urls` se reemplaza la galería completa.
     """
-    data = item_in.model_dump(exclude_unset=True, exclude={"categories"})
+    data = item_in.model_dump(exclude_unset=True, exclude={"categories", "image_urls"})
     for key, value in data.items():
         setattr(item, key, value)
 
+    # categorías (si vienen)
     if item_in.categories is not None:
         item.categories = _get_categories_or_400(db, item_in.categories)
+
+    # imágenes
+    if item_in.image_urls is not None:
+        item.image_url = str(item_in.image_urls[0])  # sync campo destacado
+        item.images = [ItemImage(url=str(url)) for url in item_in.image_urls]
 
     db.commit()
     db.refresh(item)
@@ -178,8 +188,6 @@ def update_item(db: Session, item: Item, item_in: ItemUpdate) -> Item:
 
 
 def delete_item(db: Session, item: Item) -> None:
-    """
-    Elimina un ítem.
-    """
+    """Elimina un ítem (y cascada sus imágenes)."""
     db.delete(item)
     db.commit()

@@ -7,7 +7,13 @@ export type Item = {
   description?: string;
   price_per_h: number;
   available: boolean;
+
+  /* ---- imágenes ---- */
+  /** 1 sola (compat.) */
   image_url?: string;
+  /** varias (nuevo)   */
+  image_urls?: string[];
+
   categories?: { id: number; name: string }[];
 };
 
@@ -18,7 +24,7 @@ export function useItems(params?: URLSearchParams) {
     queryKey,
     queryFn: () =>
       api.get<Item[]>("/items/", { params }).then(r => r.data),
-    staleTime: 60_000      // 1 min sin refetch
+    staleTime: 60_000 // 1 min sin refetch
   });
 
   return { data: data ?? [], loading: isLoading, refetch };

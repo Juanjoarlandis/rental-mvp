@@ -1,4 +1,540 @@
---- frontend/index.html ---
+--- rental-mvp/estructura_directorios.json ---
+[
+    {
+        "name": "rental-mvp",
+        "dirs": [
+            {
+                "name": "uploads",
+                "dirs": [],
+                "files": [
+                    "813d5d79-c6ed-4454-bcf8-cea86969abef.png",
+                    "3d304b92-4fce-4616-a08f-b74313d0008c.png",
+                    "2a373a03-bd9c-4d50-93bc-e546e44bd6f1.png",
+                    "41671a81-0d71-4490-9dd9-1629cd2811ee.png",
+                    "013d8629-ca65-48d5-85b5-44572aec0ab6.png",
+                    "282022c2-0d6d-4f87-bcc9-ecd08d43a362.png",
+                    "249e28c1-feb7-4a38-a488-3bea7af0c2fd.png",
+                    "570df2ae-13d6-4156-968d-6cde19da881d.png",
+                    "a08a849a-2bcf-4c62-8f50-320a0d3b843f.jpg",
+                    "ebefe732-4f9a-46dd-a033-8072611d8ad9.png",
+                    "f528fc74-9c61-432c-a79a-0eb5da4f6b76.png",
+                    "aa787f08-437e-4068-80bf-71d891088c56.png",
+                    "5ce5fe11-0cef-4e78-a78b-aa643b94a56d.png"
+                ]
+            },
+            {
+                "name": "frontend",
+                "dirs": [
+                    {
+                        "name": "src",
+                        "dirs": [
+                            {
+                                "name": "assets",
+                                "dirs": [],
+                                "files": [
+                                    "logo.png"
+                                ]
+                            },
+                            {
+                                "name": "hooks",
+                                "dirs": [],
+                                "files": [
+                                    "useAuth.tsx"
+                                ]
+                            },
+                            {
+                                "name": "styles",
+                                "dirs": [],
+                                "files": [
+                                    "global.css"
+                                ]
+                            },
+                            {
+                                "name": "features",
+                                "dirs": [
+                                    {
+                                        "name": "auth",
+                                        "dirs": [],
+                                        "files": [
+                                            "register.ts",
+                                            "login.ts"
+                                        ]
+                                    },
+                                    {
+                                        "name": "categories",
+                                        "dirs": [],
+                                        "files": [
+                                            "useCategories.ts"
+                                        ]
+                                    },
+                                    {
+                                        "name": "items",
+                                        "dirs": [],
+                                        "files": [
+                                            "useItems.ts",
+                                            "AddItemModal.tsx",
+                                            "ItemList.tsx"
+                                        ]
+                                    },
+                                    {
+                                        "name": "rentals",
+                                        "dirs": [],
+                                        "files": [
+                                            "RentalList.tsx",
+                                            "useRentals.ts"
+                                        ]
+                                    }
+                                ],
+                                "files": []
+                            },
+                            {
+                                "name": "pages",
+                                "dirs": [],
+                                "files": [
+                                    "Register.tsx",
+                                    "Login.tsx",
+                                    "Dashboard.tsx",
+                                    "Home.tsx"
+                                ]
+                            },
+                            {
+                                "name": "components",
+                                "dirs": [
+                                    {
+                                        "name": "ui",
+                                        "dirs": [],
+                                        "files": [
+                                            "SkeletonCard.tsx",
+                                            "LazyImage.tsx",
+                                            "ItemCard.tsx",
+                                            "SearchBar.tsx",
+                                            "ItemDetailModal.tsx",
+                                            "SocialButton.tsx",
+                                            "QuickViewModal.tsx"
+                                        ]
+                                    },
+                                    {
+                                        "name": "shared",
+                                        "dirs": [],
+                                        "files": [
+                                            "Section.tsx",
+                                            "Container.tsx"
+                                        ]
+                                    },
+                                    {
+                                        "name": "layout",
+                                        "dirs": [],
+                                        "files": [
+                                            "Footer.tsx",
+                                            "Header.tsx"
+                                        ]
+                                    },
+                                    {
+                                        "name": "Home",
+                                        "dirs": [],
+                                        "files": [
+                                            "FAQ.tsx",
+                                            "Stats.tsx",
+                                            "LogoCloud.tsx",
+                                            "Testimonials.tsx"
+                                        ]
+                                    },
+                                    {
+                                        "name": "filters",
+                                        "dirs": [],
+                                        "files": [
+                                            "FiltersSidebar.tsx"
+                                        ]
+                                    }
+                                ],
+                                "files": []
+                            }
+                        ],
+                        "files": [
+                            "App.tsx",
+                            "api.ts",
+                            "ErrorBoundary.tsx",
+                            "main.tsx",
+                            "utils.ts",
+                            "Protected.tsx"
+                        ]
+                    }
+                ],
+                "files": [
+                    "index.html",
+                    "package.json",
+                    "vite.config.ts",
+                    "Dockerfile",
+                    "nginx.conf",
+                    "tsconfig.json",
+                    "postcss.config.js",
+                    "tailwind.config.js"
+                ]
+            },
+            {
+                "name": "app",
+                "dirs": [
+                    {
+                        "name": "models",
+                        "dirs": [],
+                        "files": [
+                            "models.py",
+                            "__init__.py",
+                            "database.py"
+                        ]
+                    },
+                    {
+                        "name": "schemas",
+                        "dirs": [],
+                        "files": [
+                            "category.py",
+                            "rental.py",
+                            "token.py",
+                            "__init__.py",
+                            "item.py",
+                            "user.py"
+                        ]
+                    },
+                    {
+                        "name": "crud",
+                        "dirs": [],
+                        "files": [
+                            "category.py",
+                            "rental.py",
+                            "__init__.py",
+                            "item.py",
+                            "user.py"
+                        ]
+                    },
+                    {
+                        "name": "core",
+                        "dirs": [],
+                        "files": [
+                            "config.py",
+                            "security.py"
+                        ]
+                    },
+                    {
+                        "name": "api",
+                        "dirs": [],
+                        "files": [
+                            "rentals.py",
+                            "items.py",
+                            "categories.py",
+                            "auth.py",
+                            "__init__.py",
+                            "upload.py"
+                        ]
+                    }
+                ],
+                "files": [
+                    "main.py",
+                    "deps.py"
+                ]
+            },
+            {
+                "name": "tests",
+                "dirs": [],
+                "files": [
+                    "test_api.py",
+                    "conftest.py"
+                ]
+            },
+            {
+                "name": ".pytest_cache",
+                "dirs": [
+                    {
+                        "name": "v",
+                        "dirs": [
+                            {
+                                "name": "cache",
+                                "dirs": [],
+                                "files": [
+                                    "nodeids",
+                                    "lastfailed"
+                                ]
+                            }
+                        ],
+                        "files": []
+                    }
+                ],
+                "files": [
+                    ".gitignore",
+                    "README.md",
+                    "CACHEDIR.TAG"
+                ]
+            },
+            {
+                "name": "backend",
+                "dirs": [],
+                "files": [
+                    "Dockerfile"
+                ]
+            }
+        ],
+        "files": [
+            "estructura_directorios.json",
+            "requirements.txt",
+            "package.json",
+            ".gitignore",
+            "docker-compose.prod.yml",
+            "pytest.ini",
+            ".env",
+            "rental.db",
+            "alembic.ini"
+        ]
+    }
+]
+
+--- rental-mvp/requirements.txt ---
+# rental-mvp/requirements.txt
+alembic==1.16.3
+annotated-types==0.7.0
+anyio==4.9.0
+bcrypt==3.2.2  
+cffi==1.17.1
+click==8.2.1
+cryptography==45.0.5
+ecdsa==0.19.1
+exceptiongroup==1.3.0
+fastapi==0.116.0
+greenlet==3.2.3
+h11==0.16.0
+httptools==0.6.4
+idna==3.10
+Mako==1.3.10
+MarkupSafe==3.0.2
+passlib==1.7.4
+pyasn1==0.6.1
+pycparser==2.22
+pydantic==2.11.7
+pydantic-core==2.33.2
+pydantic-settings==2.10.1
+python-dotenv==1.1.1
+python-jose[cryptography]==3.5.0
+python-multipart==0.0.6
+PyYAML==6.0.2
+rsa==4.9.1
+six==1.17.0
+sniffio==1.3.1
+SQLAlchemy==2.0.41
+starlette==0.46.2
+tomli==2.2.1
+typing-inspection==0.4.1
+typing-extensions==4.14.1
+uvicorn==0.35.0
+uvloop==0.21.0
+watchfiles==1.1.0
+websockets==15.0.1
+email-validator
+pytest>=7.4
+httpx>=0.27
+
+--- rental-mvp/package.json ---
+{
+  "devDependencies": {
+    "@tailwindcss/container-queries": "^0.1.1"
+  }
+}
+
+
+--- rental-mvp/.gitignore ---
+backend/__pycache__/
+__pycache__/
+
+
+--- rental-mvp/docker-compose.prod.yml ---
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    env_file: .env
+    volumes:
+      - uploads:/app/uploads          # imágenes persisten
+      - ./rental.db:/app/rental.db    # sqlite fuera de la imagen
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend             # ← nuevo contexto
+      dockerfile: Dockerfile          # (vive dentro de frontend/)
+    depends_on:
+      - backend
+    ports:
+      - "80:80"                       # expone HTTP
+    restart: unless-stopped
+
+volumes:
+  uploads:
+
+
+--- rental-mvp/pytest.ini ---
+# pytest.ini
+[pytest]
+pythonpath = .
+addopts = -q
+
+
+--- rental-mvp/.env ---
+# .env (en la raíz)
+DATABASE_URL=sqlite:///./rental.db
+SECRET_KEY=tu_clave_super_secreta_aleatoria
+
+
+--- rental-mvp/alembic.ini ---
+# A generic, single database configuration.
+
+[alembic]
+# path to migration scripts.
+# this is typically a path given in POSIX (e.g. forward slashes)
+# format, relative to the token %(here)s which refers to the location of this
+# ini file
+script_location = %(here)s/alembic
+
+# template used to generate migration file names; The default value is %%(rev)s_%%(slug)s
+# Uncomment the line below if you want the files to be prepended with date and time
+# see https://alembic.sqlalchemy.org/en/latest/tutorial.html#editing-the-ini-file
+# for all available tokens
+# file_template = %%(year)d_%%(month).2d_%%(day).2d_%%(hour).2d%%(minute).2d-%%(rev)s_%%(slug)s
+
+# sys.path path, will be prepended to sys.path if present.
+# defaults to the current working directory.  for multiple paths, the path separator
+# is defined by "path_separator" below.
+prepend_sys_path = .
+
+
+# timezone to use when rendering the date within the migration file
+# as well as the filename.
+# If specified, requires the python>=3.9 or backports.zoneinfo library and tzdata library.
+# Any required deps can installed by adding `alembic[tz]` to the pip requirements
+# string value is passed to ZoneInfo()
+# leave blank for localtime
+# timezone =
+
+# max length of characters to apply to the "slug" field
+# truncate_slug_length = 40
+
+# set to 'true' to run the environment during
+# the 'revision' command, regardless of autogenerate
+# revision_environment = false
+
+# set to 'true' to allow .pyc and .pyo files without
+# a source .py file to be detected as revisions in the
+# versions/ directory
+# sourceless = false
+
+# version location specification; This defaults
+# to <script_location>/versions.  When using multiple version
+# directories, initial revisions must be specified with --version-path.
+# The path separator used here should be the separator specified by "path_separator"
+# below.
+# version_locations = %(here)s/bar:%(here)s/bat:%(here)s/alembic/versions
+
+# path_separator; This indicates what character is used to split lists of file
+# paths, including version_locations and prepend_sys_path within configparser
+# files such as alembic.ini.
+# The default rendered in new alembic.ini files is "os", which uses os.pathsep
+# to provide os-dependent path splitting.
+#
+# Note that in order to support legacy alembic.ini files, this default does NOT
+# take place if path_separator is not present in alembic.ini.  If this
+# option is omitted entirely, fallback logic is as follows:
+#
+# 1. Parsing of the version_locations option falls back to using the legacy
+#    "version_path_separator" key, which if absent then falls back to the legacy
+#    behavior of splitting on spaces and/or commas.
+# 2. Parsing of the prepend_sys_path option falls back to the legacy
+#    behavior of splitting on spaces, commas, or colons.
+#
+# Valid values for path_separator are:
+#
+# path_separator = :
+# path_separator = ;
+# path_separator = space
+# path_separator = newline
+#
+# Use os.pathsep. Default configuration used for new projects.
+path_separator = os
+
+# set to 'true' to search source files recursively
+# in each "version_locations" directory
+# new in Alembic version 1.10
+# recursive_version_locations = false
+
+# the output encoding used when revision files
+# are written from script.py.mako
+# output_encoding = utf-8
+
+# database URL.  This is consumed by the user-maintained env.py script only.
+# other means of configuring database URLs may be customized within the env.py
+# file.
+sqlalchemy.url = sqlite:///./rental.db
+
+
+[post_write_hooks]
+# post_write_hooks defines scripts or Python functions that are run
+# on newly generated revision scripts.  See the documentation for further
+# detail and examples
+
+# format using "black" - use the console_scripts runner, against the "black" entrypoint
+# hooks = black
+# black.type = console_scripts
+# black.entrypoint = black
+# black.options = -l 79 REVISION_SCRIPT_FILENAME
+
+# lint with attempts to fix using "ruff" - use the module runner, against the "ruff" module
+# hooks = ruff
+# ruff.type = module
+# ruff.module = ruff
+# ruff.options = check --fix REVISION_SCRIPT_FILENAME
+
+# Alternatively, use the exec runner to execute a binary found on your PATH
+# hooks = ruff
+# ruff.type = exec
+# ruff.executable = ruff
+# ruff.options = check --fix REVISION_SCRIPT_FILENAME
+
+# Logging configuration.  This is also consumed by the user-maintained
+# env.py script only.
+[loggers]
+keys = root,sqlalchemy,alembic
+
+[handlers]
+keys = console
+
+[formatters]
+keys = generic
+
+[logger_root]
+level = WARNING
+handlers = console
+qualname =
+
+[logger_sqlalchemy]
+level = WARNING
+handlers =
+qualname = sqlalchemy.engine
+
+[logger_alembic]
+level = INFO
+handlers =
+qualname = alembic
+
+[handler_console]
+class = StreamHandler
+args = (sys.stderr,)
+level = NOTSET
+formatter = generic
+
+[formatter_generic]
+format = %(levelname)-5.5s [%(name)s] %(message)s
+datefmt = %H:%M:%S
+
+
+--- rental-mvp/frontend/index.html ---
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -16,7 +552,7 @@
 </html>
 
 
---- frontend/package.json ---
+--- rental-mvp/frontend/package.json ---
 {
   "name": "rental-mvp-frontend",
   "version": "0.1.0",
@@ -67,7 +603,7 @@
 }
 
 
---- frontend/vite.config.ts ---
+--- rental-mvp/frontend/vite.config.ts ---
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
@@ -84,7 +620,7 @@ export default defineConfig({
 });
 
 
---- frontend/Dockerfile ---
+--- rental-mvp/frontend/Dockerfile ---
 # ───────────── Etapa 1: build Vite ─────────────
 FROM node:20 AS builder
 WORKDIR /frontend
@@ -108,7 +644,7 @@ EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
 
 
---- frontend/nginx.conf ---
+--- rental-mvp/frontend/nginx.conf ---
 server {
     listen 80;
     server_name _;
@@ -116,6 +652,7 @@ server {
     # estáticos de Vite
     root /usr/share/nginx/html;
     index index.html;
+    client_max_body_size 100M; 
 
     # single-page
     location / {
@@ -136,7 +673,7 @@ server {
 }
 
 
---- frontend/tsconfig.json ---
+--- rental-mvp/frontend/tsconfig.json ---
 {
     "compilerOptions": {
         "target": "ES2022",
@@ -162,7 +699,7 @@ server {
     ]
 }
 
---- frontend/postcss.config.js ---
+--- rental-mvp/frontend/postcss.config.js ---
 // rental-mvp/frontend/postcss.config.js
 export default {
     plugins: {
@@ -172,7 +709,7 @@ export default {
 };
 
 
---- frontend/tailwind.config.js ---
+--- rental-mvp/frontend/tailwind.config.js ---
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     content: ['./index.html', './src/**/*.{ts,tsx}'],
@@ -209,7 +746,7 @@ module.exports = {
 };
 
 
---- frontend/src/App.tsx ---
+--- rental-mvp/frontend/src/App.tsx ---
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Suspense } from "react";
@@ -269,7 +806,7 @@ export default function App() {
 }
 
 
---- frontend/src/api.ts ---
+--- rental-mvp/frontend/src/api.ts ---
 import axios from "axios";
 
 /**
@@ -286,7 +823,7 @@ api.interceptors.request.use(cfg => {
 });
 
 
---- frontend/src/ErrorBoundary.tsx ---
+--- rental-mvp/frontend/src/ErrorBoundary.tsx ---
 import React, { ErrorInfo, ReactNode } from "react";
 
 type Props = { children: ReactNode };
@@ -322,7 +859,7 @@ class ErrorBoundary extends React.Component<Props, State> {
 export default ErrorBoundary;
 
 
---- frontend/src/main.tsx ---
+--- rental-mvp/frontend/src/main.tsx ---
 // src/main.tsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
@@ -344,7 +881,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 );
 
 
---- frontend/src/utils.ts ---
+--- rental-mvp/frontend/src/utils.ts ---
 // utils.ts
 /**
  * URL base de la API.  Ajusta en .env.local si no usas localhost:8000
@@ -366,7 +903,7 @@ export function resolveImage(url: string | undefined, fallback: string) {
 }
 
 
---- frontend/src/Protected.tsx ---
+--- rental-mvp/frontend/src/Protected.tsx ---
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "./hooks/useAuth";
 
@@ -377,7 +914,7 @@ export default function Protected({ children }: { children: JSX.Element }) {
 }
 
 
---- frontend/src/hooks/useAuth.tsx ---
+--- rental-mvp/frontend/src/hooks/useAuth.tsx ---
 import React, { createContext, useContext, useState } from "react";
 
 /* ------------------------------------------------------------------ */
@@ -427,7 +964,7 @@ export const useAuth = () => {
 export const getTokenLS = () => localStorage.getItem("token");
 
 
---- frontend/src/styles/global.css ---
+--- rental-mvp/frontend/src/styles/global.css ---
 /* frontend/src/styles/global.css */
 @tailwind base;
 @tailwind components;
@@ -473,7 +1010,7 @@ export const getTokenLS = () => localStorage.getItem("token");
 }
 
 
---- frontend/src/features/auth/register.ts ---
+--- rental-mvp/frontend/src/features/auth/register.ts ---
 import { api } from "../../api";
 
 /** Lanza 400 si el username o el email ya están en uso. */
@@ -486,7 +1023,7 @@ export async function register(
 }
 
 
---- frontend/src/features/auth/login.ts ---
+--- rental-mvp/frontend/src/features/auth/login.ts ---
 import { api } from "../../api";
 
 export async function login(username: string, password: string): Promise<string> {
@@ -499,7 +1036,7 @@ export async function login(username: string, password: string): Promise<string>
 }
 
 
---- frontend/src/features/categories/useCategories.ts ---
+--- rental-mvp/frontend/src/features/categories/useCategories.ts ---
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../api";
 
@@ -516,7 +1053,7 @@ export default function useCategories() {
 }
 
 
---- frontend/src/features/items/useItems.ts ---
+--- rental-mvp/frontend/src/features/items/useItems.ts ---
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../api";
 
@@ -526,7 +1063,13 @@ export type Item = {
   description?: string;
   price_per_h: number;
   available: boolean;
+
+  /* ---- imágenes ---- */
+  /** 1 sola (compat.) */
   image_url?: string;
+  /** varias (nuevo)   */
+  image_urls?: string[];
+
   categories?: { id: number; name: string }[];
 };
 
@@ -537,20 +1080,20 @@ export function useItems(params?: URLSearchParams) {
     queryKey,
     queryFn: () =>
       api.get<Item[]>("/items/", { params }).then(r => r.data),
-    staleTime: 60_000      // 1 min sin refetch
+    staleTime: 60_000 // 1 min sin refetch
   });
 
   return { data: data ?? [], loading: isLoading, refetch };
 }
 
 
---- frontend/src/features/items/AddItemModal.tsx ---
+--- rental-mvp/frontend/src/features/items/AddItemModal.tsx ---
 /* -------------------------------------------------------------------------- */
 /*  src/features/items/AddItemModal.tsx                                       */
 /* -------------------------------------------------------------------------- */
 import { Fragment, useEffect, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { XMarkIcon, PhotoIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, PhotoIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -564,6 +1107,9 @@ import { api } from '../../api';
 /*                               schema + types                               */
 /* -------------------------------------------------------------------------- */
 
+const MB = 1024 * 1024;
+const MAX_IMAGES = 6;
+
 const priceRegex = /^\d+([.,]\d{1,2})?$/; // hasta 2 decimales
 
 const schema = z.object({
@@ -574,10 +1120,14 @@ const schema = z.object({
     .regex(priceRegex, 'Precio inválido')
     .transform(v => Number(v.replace(',', '.'))),
   categories: z.array(z.number()).min(1, 'Selecciona al menos una categoría'),
-  image: z
-    .instanceof(File)
-    .refine(f => f.size < 5 * 1024 * 1024, 'Máx. 5 MB')
-    .optional()
+  images: z
+    .array(
+      z
+        .instanceof(File)
+        .refine(f => f.size <= 5 * MB, 'Cada imagen máx. 5 MB')
+    )
+    .min(1, 'Al menos 1 imagen')
+    .max(MAX_IMAGES, `Máx. ${MAX_IMAGES} imágenes`)
 });
 
 type FormData = z.infer<typeof schema>;
@@ -591,7 +1141,6 @@ type Props = {
 /* -------------------------------------------------------------------------- */
 /*                           Componente principal                             */
 /* -------------------------------------------------------------------------- */
-
 export default function AddItemModal({ open, onClose, onCreated }: Props) {
   const { data: cats } = useCategories();
   const { token } = useAuth();
@@ -605,21 +1154,18 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
     formState: { errors, isSubmitting }
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { categories: [] }
+    defaultValues: { categories: [], images: [] }
   });
 
-  /* --------------------------- preview de imagen -------------------------- */
-  const file = watch('image');
-  const [preview, setPreview] = useState<string | null>(null);
+  /* --------------------------- previews dinámicos -------------------------- */
+  const files = watch('images'); // File[]
+  const [previews, setPreviews] = useState<string[]>([]);
 
   useEffect(() => {
-    if (file && file instanceof File) {
-      const url = URL.createObjectURL(file);
-      setPreview(url);
-      return () => URL.revokeObjectURL(url);
-    }
-    setPreview(null);
-  }, [file]);
+    const urls = files.map(f => URL.createObjectURL(f));
+    setPreviews(urls);
+    return () => urls.forEach(URL.revokeObjectURL); // cleanup
+  }, [files]);
 
   /* ------------------------------- submit --------------------------------- */
   async function onSubmit(data: FormData) {
@@ -627,16 +1173,22 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
       toast.error('Debes haber iniciado sesión');
       return;
     }
+
     try {
-      /* 1.- subimos imagen (opcional) */
-      let image_url: string | undefined;
-      if (data.image) {
-        const fd = new FormData();
-        fd.append('file', data.image);
-        const up = await api.post<{ url: string }>('/upload/', fd, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
-        image_url = up.data.url;
+      /* 1.- subimos imágenes (paralelo) */
+      let image_urls: string[] = [];
+      if (data.images.length) {
+        const uploads = await Promise.all(
+          data.images.map(async img => {
+            const fd = new FormData();
+            fd.append('file', img);
+            const r = await api.post<{ url: string }>('/upload/', fd, {
+              headers: { 'Content-Type': 'multipart/form-data' }
+            });
+            return r.data.url;
+          })
+        );
+        image_urls = uploads;
       }
 
       /* 2.- creamos ítem */
@@ -645,13 +1197,13 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
         description: data.description,
         price_per_h: data.price_per_h,
         categories: data.categories,
-        image_url
+        image_urls           // 🔥 ahora array
       });
 
       toast.success('¡Producto publicado!');
-      reset();         // limpia formulario
-      onCreated();     // refresca listado en el padre
-      onClose();       // cierra modal
+      reset();
+      onCreated();
+      onClose();
     } catch (err: any) {
       console.error(err);
       toast.error(err.response?.data?.detail ?? 'Error al crear producto');
@@ -661,7 +1213,6 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
   /* ------------------------------------------------------------------------ */
   /*                                   UI                                     */
   /* ------------------------------------------------------------------------ */
-
   return (
     <Transition show={open} as={Fragment}>
       <Dialog
@@ -695,12 +1246,9 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
             leaveFrom="scale-100 opacity-100"
             leaveTo="scale-95 opacity-0"
           >
-            {/* -------------------------------------------------------------- */}
-            {/*  Panel: alto máx. 90 vh, flex-col, scroll solo en el body     */}
-            {/* -------------------------------------------------------------- */}
             <Dialog.Panel className="flex w-full max-w-2xl max-h-[90vh] flex-col overflow-x-hidden rounded-xl bg-white shadow-xl">
-              {/* ---------- Header (fijo) ---------- */}
-              <div className="flex items-center justify-between border-b px-6 py-4">
+              {/* ---------- Header ---------- */}
+              <header className="flex items-center justify-between border-b px-6 py-4">
                 <Dialog.Title className="text-lg font-semibold">
                   Nuevo producto
                 </Dialog.Title>
@@ -714,12 +1262,12 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
                 >
                   <XMarkIcon className="h-5 w-5" />
                 </button>
-              </div>
+              </header>
 
-              {/* ---------- Formulario (scrollable) ---------- */}
+              {/* ---------- Form (scrollable) ---------- */}
               <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="flex-1 overflow-y-auto px-6 py-8 grid gap-6 md:grid-cols-2"
+                className="grid flex-1 grid-cols-1 gap-6 overflow-y-auto px-6 py-8 md:grid-cols-2"
               >
                 {/* --------------------------- Columna 1 --------------------------- */}
                 <div className="space-y-4">
@@ -777,35 +1325,63 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
 
                 {/* --------------------------- Columna 2 --------------------------- */}
                 <div className="space-y-4">
-                  {/* Imagen */}
+                  {/* Imágenes */}
                   <div>
-                    <label className="block text-sm font-medium">Imagen</label>
+                    <label className="block text-sm font-medium">
+                      Imágenes ({files.length}/{MAX_IMAGES})
+                    </label>
 
-                    <label className="mt-1 flex h-48 w-full cursor-pointer items-center justify-center rounded border-2 border-dashed border-gray-300 text-sm text-gray-500 hover:border-brand hover:text-brand">
-                      {preview ? (
-                        <img
-                          src={preview}
-                          alt="preview"
-                          className="h-full w-full object-cover"
-                        />
-                      ) : (
-                        <span className="flex flex-col items-center gap-1">
-                          <PhotoIcon className="h-8 w-8" />
-                          <span>PNG, JPG · máx. 5 MB</span>
-                        </span>
-                      )}
+                    {/* zona de drop / input */}
+                    <label className="mt-1 flex min-h-[4rem] w-full cursor-pointer flex-col items-center justify-center rounded border-2 border-dashed border-gray-300 p-4 text-center text-sm text-gray-500 hover:border-brand hover:text-brand">
+                      <PhotoIcon className="h-8 w-8" />
+                      <span className="mt-1">
+                        PNG, JPG · máx. 5 MB c/u · hasta {MAX_IMAGES}
+                      </span>
                       <input
                         type="file"
                         accept="image/*"
+                        multiple
                         className="sr-only"
                         onChange={e =>
-                          setValue('image', e.target.files?.[0] as File)
+                          setValue(
+                            'images',
+                            [...(e.target.files ?? [])] as File[],
+                            { shouldValidate: true }
+                          )
                         }
                       />
                     </label>
-                    {errors.image && (
-                      <p className="text-xs text-red-600">
-                        {errors.image.message}
+
+                    {/* previews */}
+                    {previews.length > 0 && (
+                      <div className="mt-4 grid grid-cols-3 gap-2">
+                        {previews.map((src, i) => (
+                          <div key={i} className="relative">
+                            <img
+                              src={src}
+                              alt={`preview ${i + 1}`}
+                              className="h-24 w-full rounded object-cover"
+                            />
+                            <button
+                              type="button"
+                              title="Eliminar"
+                              onClick={() => {
+                                const copy = [...files];
+                                copy.splice(i, 1);
+                                setValue('images', copy, { shouldValidate: true });
+                              }}
+                              className="absolute right-0 top-0 rounded-bl bg-black/60 p-0.5 text-white transition-colors hover:bg-black/80"
+                            >
+                              <TrashIcon className="h-4 w-4" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {errors.images && (
+                      <p className="mt-1 text-xs text-red-600">
+                        {errors.images.message as string}
                       </p>
                     )}
                   </div>
@@ -859,7 +1435,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
                     Cancelar
                   </button>
                   <button className="btn" disabled={isSubmitting}>
-                    Publicar
+                    {isSubmitting ? 'Publicando…' : 'Publicar'}
                   </button>
                 </div>
               </form>
@@ -872,7 +1448,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
 }
 
 
---- frontend/src/features/items/ItemList.tsx ---
+--- rental-mvp/frontend/src/features/items/ItemList.tsx ---
 import { useEffect, useMemo, useRef, useState } from 'react';
 import axios from 'axios';
 import Container from '../../components/shared/Container';
@@ -1049,7 +1625,7 @@ const GridSkeleton = () => (
 );
 
 
---- frontend/src/features/rentals/RentalList.tsx ---
+--- rental-mvp/frontend/src/features/rentals/RentalList.tsx ---
 import { useAuth } from "../../hooks/useAuth";
 import { useRentals } from "./useRentals";
 
@@ -1079,7 +1655,7 @@ export default function RentalList() {
 }
 
 
---- frontend/src/features/rentals/useRentals.ts ---
+--- rental-mvp/frontend/src/features/rentals/useRentals.ts ---
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../api";
 import { Item } from "../items/useItems";
@@ -1112,7 +1688,7 @@ export function useRentals(token: string | null) {
 }
 
 
---- frontend/src/pages/Register.tsx ---
+--- rental-mvp/frontend/src/pages/Register.tsx ---
 // src/pages/Register.tsx
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -1290,7 +1866,7 @@ export default function Register() {
 }
 
 
---- frontend/src/pages/Login.tsx ---
+--- rental-mvp/frontend/src/pages/Login.tsx ---
 // src/pages/Login.tsx
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -1385,7 +1961,7 @@ export default function Login() {
 }
 
 
---- frontend/src/pages/Dashboard.tsx ---
+--- rental-mvp/frontend/src/pages/Dashboard.tsx ---
 import Container from '../components/shared/Container';
 import ItemList from '../features/items/ItemList';
 import RentalList from '../features/rentals/RentalList';
@@ -1406,7 +1982,7 @@ export default function Dashboard() {
 }
 
 
---- frontend/src/pages/Home.tsx ---
+--- rental-mvp/frontend/src/pages/Home.tsx ---
 /* -------------------------------------------------------------------------- */
 /*  src/pages/Home.tsx                                                        */
 /* -------------------------------------------------------------------------- */
@@ -1537,7 +2113,7 @@ export default function Home() {
 }
 
 
---- frontend/src/components/ui/SkeletonCard.tsx ---
+--- rental-mvp/frontend/src/components/ui/SkeletonCard.tsx ---
 export default function SkeletonCard() {
   return (
     <article
@@ -1559,7 +2135,7 @@ export default function SkeletonCard() {
 }
 
 
---- frontend/src/components/ui/LazyImage.tsx ---
+--- rental-mvp/frontend/src/components/ui/LazyImage.tsx ---
 import { useState } from 'react';
 
 type Props = {
@@ -1600,30 +2176,35 @@ export default function LazyImage({
 }
 
 
---- frontend/src/components/ui/ItemCard.tsx ---
-import { useState } from 'react';
-import { Item } from '../../features/items/useItems';
-import LazyImage from './LazyImage';
-import { resolveImage } from '../../utils';
-import QuickViewModal from './QuickViewModal';
-import clsx from 'clsx';
-import { HeartIcon, EyeIcon } from '@heroicons/react/24/solid';
+--- rental-mvp/frontend/src/components/ui/ItemCard.tsx ---
+/* -------------------------------------------------------------------------- */
+/*  src/components/ui/ItemCard.tsx                                            */
+/* -------------------------------------------------------------------------- */
+import { useState } from "react";
+import { HeartIcon, EyeIcon } from "@heroicons/react/24/solid";
+import clsx from "clsx";
+
+import { Item } from "../../features/items/useItems";
+import { resolveImage } from "../../utils";
+import LazyImage from "./LazyImage";
+import ItemDetailModal from "./ItemDetailModal";
 
 export default function ItemCard({ item }: { item: Item }) {
   const [open, setOpen] = useState(false);
 
+  /* -------- portada (1ª del array o la legacy) -------- */
+  const cover = item.image_urls?.[0] ?? item.image_url;
+
   const imgSrc = resolveImage(
-    item.image_url,
+    cover,
     `https://source.unsplash.com/640x480/?${encodeURIComponent(item.name)}`
   );
 
   return (
     <>
       <article
-        className="
-          flex flex-col overflow-hidden rounded-lg bg-surface shadow-card
-          transition-transform duration-200 hover:-translate-y-1 hover:shadow-cardHover
-        "
+        onClick={() => setOpen(true)}
+        className="flex cursor-pointer flex-col overflow-hidden rounded-lg bg-surface shadow-card transition-transform duration-200 hover:-translate-y-1 hover:shadow-cardHover"
       >
         {/* ---------- Foto ---------- */}
         <div className="relative">
@@ -1631,7 +2212,6 @@ export default function ItemCard({ item }: { item: Item }) {
             src={imgSrc}
             alt={item.name}
             className="aspect-[4/3] w-full object-contain p-2"
-            onClick={() => setOpen(true)}
           />
 
           {!item.available && (
@@ -1640,8 +2220,9 @@ export default function ItemCard({ item }: { item: Item }) {
             </span>
           )}
 
+          {/* acciones rápidas */}
           <div className="absolute inset-0 flex items-start justify-end gap-2 p-2 opacity-0 transition-opacity hover:opacity-100">
-            <IconBtn title="Vista rápida" onClick={() => setOpen(true)}>
+            <IconBtn title="Vista rápida">
               <EyeIcon className="h-5 w-5" />
             </IconBtn>
             <IconBtn title="Favorito">
@@ -1666,38 +2247,37 @@ export default function ItemCard({ item }: { item: Item }) {
             </p>
             <span
               className={clsx(
-                'badge',
-                item.available ? 'badge--ok' : 'badge--danger'
+                "badge",
+                item.available ? "badge--ok" : "badge--danger"
               )}
             >
-              {item.available ? 'Disponible' : 'Alquilado'}
+              {item.available ? "Disponible" : "Alquilado"}
             </span>
           </div>
         </div>
       </article>
 
-      <QuickViewModal open={open} onClose={() => setOpen(false)} item={item} />
+      {/* ---------- Modal de detalle ---------- */}
+      <ItemDetailModal open={open} onClose={() => setOpen(false)} item={item} />
     </>
   );
 }
 
+/* -------------------------------------------------------------------------- */
+/*                                 Helpers                                    */
+/* -------------------------------------------------------------------------- */
 function IconBtn({
   children,
-  onClick,
-  title,
+  title
 }: {
   children: React.ReactNode;
-  onClick?: () => void;
   title: string;
 }) {
   return (
     <button
       type="button"
       title={title}
-      onClick={e => {
-        e.stopPropagation();
-        onClick?.();
-      }}
+      onClick={e => e.stopPropagation()}
       className="rounded-full bg-white/90 p-1 text-gray-600 shadow transition-colors hover:bg-white"
     >
       {children}
@@ -1706,7 +2286,7 @@ function IconBtn({
 }
 
 
---- frontend/src/components/ui/SearchBar.tsx ---
+--- rental-mvp/frontend/src/components/ui/SearchBar.tsx ---
 import { useForm } from 'react-hook-form';
 
 type Props = { onSubmit: (q: URLSearchParams) => void };
@@ -1766,7 +2346,221 @@ export default function SearchBar({ onSubmit }: Props) {
 }
 
 
---- frontend/src/components/ui/SocialButton.tsx ---
+--- rental-mvp/frontend/src/components/ui/ItemDetailModal.tsx ---
+/* -------------------------------------------------------------------------- */
+/*  src/components/ui/ItemDetailModal.tsx                                     */
+/* -------------------------------------------------------------------------- */
+import { Fragment, useState } from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import {
+  XMarkIcon,
+  StarIcon,
+  ShieldCheckIcon,
+  ClockIcon
+} from "@heroicons/react/24/outline";
+import { Item } from "../../features/items/useItems";
+import { resolveImage } from "../../utils";
+import LazyImage from "./LazyImage";
+import clsx from "clsx";
+
+type Props = {
+  open: boolean;
+  onClose: () => void;
+  item: Item | null;
+};
+
+export default function ItemDetailModal({ open, onClose, item }: Props) {
+  if (!item) return null;
+
+  /* ---------- galería: imágenes reales o fallback ---------- */
+  const gallery =
+    item.image_urls && item.image_urls.length
+      ? item.image_urls
+      : [
+          resolveImage(
+            item.image_url,
+            `https://source.unsplash.com/800x600/?${encodeURIComponent(
+              item.name
+            )}`
+          )
+        ];
+
+  const [active, setActive] = useState(0);
+
+  return (
+    <Transition show={open} as={Fragment}>
+      <Dialog onClose={onClose} className="relative z-50">
+        {/* ---------- Backdrop ---------- */}
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-200"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-150"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
+        </Transition.Child>
+
+        {/* ---------- Wrapper ---------- */}
+        <div className="fixed inset-0 grid place-items-center p-4">
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-200"
+            enterFrom="scale-95 opacity-0"
+            enterTo="scale-100 opacity-100"
+            leave="ease-in duration-150"
+            leaveFrom="scale-100 opacity-100"
+            leaveTo="scale-95 opacity-0"
+          >
+            <Dialog.Panel className="flex w-full max-w-5xl max-h-[95vh] flex-col overflow-hidden rounded-xl bg-white shadow-xl">
+              {/* ---------------- Header ---------------- */}
+              <header className="flex items-center justify-between border-b px-6 py-4">
+                <Dialog.Title className="text-lg font-semibold">
+                  {item.name}
+                </Dialog.Title>
+                <button
+                  onClick={onClose}
+                  className="rounded p-1 text-gray-500 hover:bg-gray-100 focus:outline-none"
+                >
+                  <XMarkIcon className="h-6 w-6" />
+                </button>
+              </header>
+
+              {/* ---------------- Body ---------------- */}
+              <section className="flex flex-1 flex-col gap-8 overflow-y-auto p-6 md:flex-row">
+                {/* ---------- Galería ---------- */}
+                <div className="md:w-1/2">
+                  {/* principal */}
+                  <div className="aspect-video overflow-hidden rounded-lg border">
+                    <LazyImage
+                      src={gallery[active]}
+                      alt={item.name}
+                      className="h-full w-full object-contain"
+                      sizes="(min-width:768px) 50vw, 90vw"
+                    />
+                  </div>
+
+                  {/* thumbnails */}
+                  {gallery.length > 1 && (
+                    <div className="mt-4 flex gap-2 overflow-x-auto">
+                      {gallery.map((src, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setActive(i)}
+                          className={clsx(
+                            "shrink-0 overflow-hidden rounded-md border",
+                            active === i && "ring-2 ring-brand"
+                          )}
+                        >
+                          <LazyImage
+                            src={src}
+                            alt=""
+                            className="h-16 w-24 object-cover"
+                            sizes="96px"
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* ---------- Ficha ---------- */}
+                <div className="flex flex-1 flex-col gap-6 md:pr-4">
+                  {/* precio + rating */}
+                  <div className="flex items-center justify-between">
+                    <p className="text-3xl font-bold text-brand">
+                      {item.price_per_h.toFixed(2)} €/h
+                    </p>
+                    <Rating value={4} />
+                  </div>
+
+                  {/* descripción */}
+                  {item.description ? (
+                    <p className="prose max-w-none text-sm leading-relaxed">
+                      {item.description}
+                    </p>
+                  ) : (
+                    <p className="text-sm text-gray-500">Sin descripción.</p>
+                  )}
+
+                  {/* categorías */}
+                  {!!item.categories?.length && (
+                    <div className="flex flex-wrap gap-2">
+                      {item.categories.map(c => (
+                        <span
+                          key={c.id}
+                          className="rounded-full bg-gray-100 px-3 py-0.5 text-xs text-gray-600"
+                        >
+                          {c.name}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* ventajas rápidas */}
+                  <ul className="space-y-2 text-sm">
+                    <Feature icon={ShieldCheckIcon} text="Pago seguro con fianza" />
+                    <Feature
+                      icon={ClockIcon}
+                      text="Cancelación gratis hasta 12 h antes"
+                    />
+                  </ul>
+
+                  {/* CTA */}
+                  <button className="btn mt-auto w-full md:max-w-xs">
+                    Reservar ahora
+                  </button>
+                </div>
+              </section>
+            </Dialog.Panel>
+          </Transition.Child>
+        </div>
+      </Dialog>
+    </Transition>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                 Helpers                                    */
+/* -------------------------------------------------------------------------- */
+function Rating({ value }: { value: number }) {
+  return (
+    <div className="flex items-center gap-1">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <StarIcon
+          key={i}
+          className={clsx(
+            "h-5 w-5",
+            i < value ? "fill-amber-400 stroke-amber-400" : "stroke-gray-300"
+          )}
+        />
+      ))}
+      <span className="ml-1 text-xs text-gray-500">
+        ({value.toFixed(1)})
+      </span>
+    </div>
+  );
+}
+
+function Feature({
+  icon: Icon,
+  text
+}: {
+  icon: (props: any) => JSX.Element;
+  text: string;
+}) {
+  return (
+    <li className="flex items-center gap-2">
+      <Icon className="h-4 w-4 shrink-0 text-brand" />
+      {text}
+    </li>
+  );
+}
+
+
+--- rental-mvp/frontend/src/components/ui/SocialButton.tsx ---
 // src/components/ui/SocialButton.tsx
 import { IconType } from 'react-icons';
 import clsx from 'clsx';
@@ -1794,14 +2588,17 @@ export default function SocialButton({ icon: Icon, label, provider }: Props) {
 }
 
 
---- frontend/src/components/ui/QuickViewModal.tsx ---
-import { Fragment } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
-import { XMarkIcon, StarIcon } from '@heroicons/react/24/outline';
-import { Item } from '../../features/items/useItems';
-import LazyImage from './LazyImage';
-import { resolveImage } from '../../utils';
-import clsx from 'clsx';
+--- rental-mvp/frontend/src/components/ui/QuickViewModal.tsx ---
+/* -------------------------------------------------------------------------- */
+/*  src/components/ui/QuickViewModal.tsx                                      */
+/* -------------------------------------------------------------------------- */
+import { Fragment } from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import { XMarkIcon, StarIcon } from "@heroicons/react/24/outline";
+import { Item } from "../../features/items/useItems";
+import LazyImage from "./LazyImage";
+import { resolveImage } from "../../utils";
+import clsx from "clsx";
 
 type Props = {
   open: boolean;
@@ -1810,19 +2607,20 @@ type Props = {
 };
 
 export default function QuickViewModal({ open, onClose, item }: Props) {
-  /* -------- si aún no hay datos -------- */
   if (!item) return null;
 
-  /* -------- URL de la imagen -------- */
+  /* portada */
+  const cover = item.image_urls?.[0] ?? item.image_url;
+
   const imgSrc = resolveImage(
-    item.image_url,
+    cover,
     `https://source.unsplash.com/800x600/?${encodeURIComponent(item.name)}`
   );
 
   return (
     <Transition show={open} as={Fragment}>
       <Dialog onClose={onClose} className="relative z-50">
-        {/* ---------------- Backdrop ---------------- */}
+        {/* ---------- Backdrop ---------- */}
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-200"
@@ -1835,7 +2633,7 @@ export default function QuickViewModal({ open, onClose, item }: Props) {
           <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
         </Transition.Child>
 
-        {/* ---------------- Panel ---------------- */}
+        {/* ---------- Panel ---------- */}
         <div className="fixed inset-0 grid place-items-center p-4">
           <Transition.Child
             as={Fragment}
@@ -1846,13 +2644,8 @@ export default function QuickViewModal({ open, onClose, item }: Props) {
             leaveFrom="scale-100 opacity-100"
             leaveTo="scale-95 opacity-0"
           >
-            <Dialog.Panel
-              className="
-                flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden
-                rounded-xl bg-white shadow-xl
-              "
-            >
-              {/* ---------- Header ---------- */}
+            <Dialog.Panel className="flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-xl bg-white shadow-xl">
+              {/* header */}
               <div className="flex items-center justify-between border-b p-4">
                 <Dialog.Title className="text-lg font-semibold">
                   {item.name}
@@ -1865,49 +2658,38 @@ export default function QuickViewModal({ open, onClose, item }: Props) {
                 </button>
               </div>
 
-              {/* ---------- Body ---------- */}
-              <div
-                className="
-                  grid gap-6 overflow-y-auto p-6
-                  md:grid-cols-2                    /* 1 col → xs-sm | 2 col → ≥ md */
-                "
-              >
-                {/* ----- Imagen ----- */}
+              {/* body */}
+              <div className="grid gap-6 overflow-y-auto p-6 md:grid-cols-2">
+                {/* imagen */}
                 <div className="flex items-center justify-center">
                   <LazyImage
                     src={imgSrc}
                     alt={item.name}
-                    className="
-                      w-full rounded-lg object-contain
-                      max-h-[60vh]                 /* nunca se sale de la viewport */
-                    "
+                    className="w-full max-h-[60vh] rounded-lg object-contain"
                   />
                 </div>
 
-                {/* ----- Info ----- */}
+                {/* info */}
                 <div className="flex flex-col gap-4">
-                  {/* Precio */}
                   <p className="text-2xl font-bold text-brand">
                     {item.price_per_h.toFixed(2)} €/h
                   </p>
 
-                  {/* Rating (demo) */}
                   <div className="flex items-center gap-1">
                     {Array.from({ length: 5 }).map((_, i) => (
                       <StarIcon
                         key={i}
                         className={clsx(
-                          'h-5 w-5',
+                          "h-5 w-5",
                           i < 4
-                            ? 'fill-amber-400 stroke-amber-400'
-                            : 'stroke-gray-300'
+                            ? "fill-amber-400 stroke-amber-400"
+                            : "stroke-gray-300"
                         )}
                       />
                     ))}
                     <span className="ml-1 text-sm text-gray-500">(4,0)</span>
                   </div>
 
-                  {/* Descripción */}
                   {item.description ? (
                     <p className="prose max-w-none text-sm leading-relaxed">
                       {item.description}
@@ -1916,8 +2698,7 @@ export default function QuickViewModal({ open, onClose, item }: Props) {
                     <p className="text-sm text-gray-500">Sin descripción.</p>
                   )}
 
-                  {/* Categorías */}
-                  {item.categories?.length ? (
+                  {!!item.categories?.length && (
                     <div className="flex flex-wrap gap-2">
                       {item.categories.map(c => (
                         <span
@@ -1928,9 +2709,8 @@ export default function QuickViewModal({ open, onClose, item }: Props) {
                         </span>
                       ))}
                     </div>
-                  ) : null}
+                  )}
 
-                  {/* CTA */}
                   <button className="btn mt-auto w-full">Reservar ahora</button>
                 </div>
               </div>
@@ -1943,7 +2723,7 @@ export default function QuickViewModal({ open, onClose, item }: Props) {
 }
 
 
---- frontend/src/components/shared/Section.tsx ---
+--- rental-mvp/frontend/src/components/shared/Section.tsx ---
 type Props = {
   title?: string;
   children: React.ReactNode;
@@ -1962,13 +2742,13 @@ export default function Section({ title, children, id }: Props) {
 }
 
 
---- frontend/src/components/shared/Container.tsx ---
+--- rental-mvp/frontend/src/components/shared/Container.tsx ---
 export default function Container({ children }: { children: React.ReactNode }) {
   return <div className="container">{children}</div>;
 }
 
 
---- frontend/src/components/layout/Footer.tsx ---
+--- rental-mvp/frontend/src/components/layout/Footer.tsx ---
 export default function Footer() {
   return (
     <footer className="mt-24 border-t bg-white py-12 text-center text-sm text-gray-500">
@@ -1978,7 +2758,7 @@ export default function Footer() {
 }
 
 
---- frontend/src/components/layout/Header.tsx ---
+--- rental-mvp/frontend/src/components/layout/Header.tsx ---
 // src/components/layout/Header.tsx
 import { Link, NavLink } from 'react-router-dom';
 import logo from '../../assets/logo.png';
@@ -2025,7 +2805,7 @@ export default function Header() {
 }
 
 
---- frontend/src/components/Home/FAQ.tsx ---
+--- rental-mvp/frontend/src/components/Home/FAQ.tsx ---
 import { Disclosure } from '@headlessui/react';
 import { ChevronUpIcon } from '@heroicons/react/24/outline';
 import Container from '../shared/Container';
@@ -2068,7 +2848,7 @@ export default function FAQ() {
 }
 
 
---- frontend/src/components/Home/Stats.tsx ---
+--- rental-mvp/frontend/src/components/Home/Stats.tsx ---
 import { useEffect, useRef, useState } from 'react';
 import Container from '../shared/Container';
 
@@ -2113,7 +2893,7 @@ export default function Stats() {
 }
 
 
---- frontend/src/components/Home/LogoCloud.tsx ---
+--- rental-mvp/frontend/src/components/Home/LogoCloud.tsx ---
 import Container from '../shared/Container';
 
 const LOGOS = [
@@ -2150,7 +2930,7 @@ function SectionWrapper({ children }: { children: React.ReactNode }) {
 }
 
 
---- frontend/src/components/Home/Testimonials.tsx ---
+--- rental-mvp/frontend/src/components/Home/Testimonials.tsx ---
 import Container from '../shared/Container';
 
 const TESTIMONIALS = [
@@ -2207,7 +2987,7 @@ function SectionWrapper({ children }: { children: React.ReactNode }) {
 }
 
 
---- frontend/src/components/filters/FiltersSidebar.tsx ---
+--- rental-mvp/frontend/src/components/filters/FiltersSidebar.tsx ---
 import { Disclosure } from '@headlessui/react';
 import useCategories, { Category } from '../../features/categories/useCategories';
 
@@ -2337,5 +3117,1516 @@ export default function FiltersSidebar({ value, onChange, onReset }: Props) {
     </div>
   );
 }
+
+
+--- rental-mvp/app/main.py ---
+# app/main.py
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles          # 🆕
+
+from app import models  # noqa: F401
+from app.api import auth, items, rentals, categories, upload   # 🆕
+
+app = FastAPI(title="rental-mvp")
+
+# Routers
+app.include_router(auth.router,       prefix="/api/auth",      tags=["auth"])
+app.include_router(items.router,      prefix="/api/items",     tags=["items"])
+app.include_router(rentals.router,    prefix="/api/rentals",   tags=["rentals"])
+app.include_router(categories.router, prefix="/api/categories", tags=["categories"])
+app.include_router(upload.router,     prefix="/api/upload",    tags=["upload"])  # 🆕
+
+# ► archivos subidos accesibles en /uploads/…
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")         # 🆕
+
+
+--- rental-mvp/app/deps.py ---
+# app/deps.py
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+from sqlalchemy.orm import Session
+from jose import JWTError, jwt
+
+from app.models.database import SessionLocal
+from app.models.models import User
+from app.core.config import settings
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> User:
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="No se pudo validar las credenciales",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+
+    user = db.query(User).filter(User.username == username).first()
+    if user is None:
+        raise credentials_exception
+    return user
+
+
+--- rental-mvp/app/models/models.py ---
+from __future__ import annotations
+
+import datetime
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    Float,
+    ForeignKey,
+    Integer,
+    String,
+    Table,
+)
+from sqlalchemy.orm import relationship
+
+from .database import Base
+
+# ───────── relación Item ↔ Category ─────────
+item_categories = Table(
+    "item_categories",
+    Base.metadata,
+    Column(
+        "item_id",
+        Integer,
+        ForeignKey("items.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
+    Column(
+        "category_id",
+        Integer,
+        ForeignKey("categories.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
+)
+
+# ───────── tabla de imágenes ─────────
+class ItemImage(Base):
+    __tablename__ = "item_images"
+
+    id = Column(Integer, primary_key=True)
+    item_id = Column(
+        Integer,
+        ForeignKey("items.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+    url = Column(String, nullable=False)
+
+    item = relationship("Item", back_populates="images")
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True, nullable=False)
+    email = Column(String, unique=True, index=True, nullable=False)
+    hashed_pw = Column(String, nullable=False)
+
+    items = relationship(
+        "Item",
+        back_populates="owner",
+        cascade="all, delete-orphan",
+    )
+    rentals = relationship(
+        "Rental",
+        back_populates="renter",
+        cascade="all, delete-orphan",
+    )
+
+
+class Category(Base):
+    __tablename__ = "categories"
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String, unique=True, index=True, nullable=False)
+
+    items = relationship(
+        "Item",
+        secondary=item_categories,
+        back_populates="categories",
+    )
+
+
+class Item(Base):
+    __tablename__ = "items"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True, nullable=False)
+    description = Column(String)
+    price_per_h = Column(Float, nullable=False)
+
+    # Imagen destacada (compatibilidad retro)
+    image_url = Column(String, nullable=True)
+
+    owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    owner = relationship("User", back_populates="items")
+
+    available = Column(Boolean, default=True)
+
+    # relaciones
+    categories = relationship(
+        "Category",
+        secondary=item_categories,
+        back_populates="items",
+    )
+    images = relationship(
+        "ItemImage",
+        back_populates="item",
+        cascade="all, delete-orphan",
+        order_by="ItemImage.id",
+    )
+
+    # ──────────────────────── NUEVO ─────────────────────────
+    @property
+    def image_urls(self) -> List[str]:
+        """Devuelve las URLs de la galería en el mismo orden que `images`."""
+        return [img.url for img in self.images]
+
+
+class Rental(Base):
+    __tablename__ = "rentals"
+
+    id = Column(Integer, primary_key=True, index=True)
+    item_id = Column(Integer, ForeignKey("items.id"), nullable=False)
+    renter_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+
+    start_at = Column(DateTime, default=datetime.datetime.utcnow)
+    end_at = Column(DateTime)
+
+    deposit = Column(Float, nullable=False)
+    returned = Column(Boolean, default=False)
+
+    item = relationship("Item")
+    renter = relationship("User", back_populates="rentals")
+
+
+--- rental-mvp/app/models/__init__.py ---
+# app/models/__init__.py
+"""
+Al importar `app.models` se registran todos los modelos en `Base.metadata`.
+"""
+from .models import User, Category, Item, Rental  # noqa: F401
+
+
+--- rental-mvp/app/models/database.py ---
+# app/models/database.py
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from app.core.config import settings
+
+# Si usas SQLite hay que pasar connect_args
+connect_args = {"check_same_thread": False} if settings.DATABASE_URL.startswith("sqlite") else {}
+
+engine = create_engine(
+    settings.DATABASE_URL,
+    connect_args=connect_args,
+    echo=True,  # ponte True en dev para ver SQL en consola
+)
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
+
+
+--- rental-mvp/app/schemas/category.py ---
+# app/schemas/category.py
+from pydantic import BaseModel, Field
+
+
+class CategoryBase(BaseModel):
+    name: str = Field(..., min_length=1, max_length=50)
+
+
+class CategoryCreate(CategoryBase):
+    """Crear categoría (solo nombre)."""
+    pass
+
+
+class CategoryOut(CategoryBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+
+--- rental-mvp/app/schemas/rental.py ---
+# app/schemas/rental.py
+from datetime import datetime
+from pydantic import BaseModel, field_validator
+
+
+class RentalBase(BaseModel):
+    item_id: int
+    start_at: datetime
+    end_at: datetime
+
+
+class RentalCreate(RentalBase):
+    """
+    Al crear un alquiler nos aseguramos de que la hora de fin sea
+    posterior a la hora de inicio.
+    """
+
+    @field_validator("end_at")
+    def end_must_be_after_start(cls, v: datetime, info):
+        start = info.data.get("start_at")
+        if start and v <= start:
+            raise ValueError("end_at debe ser posterior a start_at")
+        return v
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "item_id": 42,
+                    "start_at": "2025-01-01T10:00:00Z",
+                    "end_at": "2025-01-01T12:00:00Z",
+                }
+            ]
+        }
+    }
+
+
+class RentalOut(RentalBase):
+    id: int
+    renter_id: int
+    deposit: float
+    returned: bool
+
+    class Config:
+        from_attributes = True
+
+
+--- rental-mvp/app/schemas/token.py ---
+# app/schemas/token.py
+from pydantic import BaseModel
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+
+
+--- rental-mvp/app/schemas/__init__.py ---
+# app/schemas/__init__.py
+from .user import UserCreate, UserOut
+from .category import CategoryCreate, CategoryOut
+from .item import ItemCreate, ItemUpdate, ItemOut
+from .rental import RentalCreate, RentalOut
+from .token import Token
+
+__all__ = [
+    # users
+    "UserCreate",
+    "UserOut",
+    # categories
+    "CategoryCreate",
+    "CategoryOut",
+    # items
+    "ItemCreate",
+    "ItemUpdate",
+    "ItemOut",
+    # rentals
+    "RentalCreate",
+    "RentalOut",
+    # auth
+    "Token",
+]
+
+
+--- rental-mvp/app/schemas/item.py ---
+from __future__ import annotations
+from typing import List, Optional
+
+from pydantic import BaseModel, Field, PositiveFloat, HttpUrl
+
+from .category import CategoryOut
+
+
+# ─────────────────────────── Base ──────────────────────────────────────────
+class ItemBase(BaseModel):
+    name: str = Field(..., min_length=1, max_length=80)
+    description: Optional[str] = None
+    price_per_h: PositiveFloat
+
+
+# ─────────────────────────── Crear ─────────────────────────────────────────
+class ItemCreate(ItemBase):
+    image_urls: List[HttpUrl] = Field(..., min_length=1, max_length=6)
+    categories: Optional[List[int]] = Field(
+        default=None,
+        description="IDs de categorías a asociar",
+        examples=[[1, 2]],
+    )
+
+
+# ─────────────────────── Actualizar (PATCH) ────────────────────────────────
+class ItemUpdate(BaseModel):
+    name: Optional[str] = Field(None, min_length=1, max_length=80)
+    description: Optional[str] = None
+    price_per_h: Optional[PositiveFloat] = None
+    image_urls: Optional[List[HttpUrl]] = Field(
+        default=None, min_length=1, max_length=6
+    )
+    categories: Optional[List[int]] = Field(
+        default=None, description="Lista completa de IDs (reemplaza)"
+    )
+
+    model_config = {"extra": "forbid"}
+
+
+# ─────────────────────────── Salida ────────────────────────────────────────
+class ItemOut(ItemBase):
+    id: int
+    owner_id: int
+    available: bool
+    categories: List[CategoryOut]
+    image_urls: List[HttpUrl]                        # ← NUEVO
+    # campo legacy para no romper clientes antiguos
+    image_url: Optional[HttpUrl] = None
+
+    class Config:
+        from_attributes = True
+
+
+--- rental-mvp/app/schemas/user.py ---
+# app/schemas/user.py
+from pydantic import BaseModel, EmailStr
+
+class UserCreate(BaseModel):
+    username: str
+    email: EmailStr
+    password: str
+
+
+class UserOut(BaseModel):
+    id: int
+    username: str
+    email: EmailStr
+
+    class Config:              # <-- aquí
+        from_attributes = True
+
+
+--- rental-mvp/app/crud/category.py ---
+# app/crud/category.py
+from typing import List, Optional
+
+from sqlalchemy.orm import Session
+
+from app.models.models import Category
+from app.schemas.category import CategoryCreate
+
+
+def get_category(db: Session, category_id: int) -> Optional[Category]:
+    return db.query(Category).filter(Category.id == category_id).first()
+
+
+def get_categories(db: Session) -> List[Category]:
+    return db.query(Category).order_by(Category.name).all()
+
+
+def create_category(db: Session, cat_in: CategoryCreate) -> Category:
+    db_cat = Category(**cat_in.model_dump())
+    db.add(db_cat)
+    db.commit()
+    db.refresh(db_cat)
+    return db_cat
+
+
+--- rental-mvp/app/crud/rental.py ---
+# app/crud/rental.py
+from decimal import Decimal, ROUND_HALF_UP
+from datetime import datetime
+from typing import List
+
+from sqlalchemy.orm import Session
+
+from app.models.models import Item, Rental
+from app.schemas.rental import RentalCreate
+
+
+def get_rental(db: Session, rental_id: int) -> Rental | None:
+    return db.query(Rental).filter(Rental.id == rental_id).first()
+
+
+def get_rentals_by_user(db: Session, renter_id: int) -> List[Rental]:
+    return db.query(Rental).filter(Rental.renter_id == renter_id).all()
+
+
+def create_rental(db: Session, renter_id: int, rent_in: RentalCreate) -> Rental:
+    """Crea un alquiler y calcula el depósito como 120 % del coste estimado,
+    redondeado a 2 decimales para evitar errores de coma flotante."""
+    item = db.query(Item).get(rent_in.item_id)  # legacy API, suficiente aquí
+    hours = (rent_in.end_at - rent_in.start_at).total_seconds() / 3600
+    estimated = hours * item.price_per_h
+
+    deposit = float(                      # guardamos como float en la BD
+        Decimal(estimated * 1.2).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+    )
+
+    db_rental = Rental(
+        renter_id=renter_id,
+        deposit=deposit,
+        returned=False,
+        **rent_in.model_dump(),           # pydantic v2
+    )
+
+    db.add(db_rental)
+    item.available = False
+    db.commit()
+    db.refresh(db_rental)
+    return db_rental
+
+
+def mark_returned(db: Session, rental: Rental) -> Rental:
+    """Marca el alquiler como devuelto y vuelve a poner el ítem disponible."""
+    rental.returned = True
+    rental.item.available = True
+    db.commit()
+    db.refresh(rental)
+    return rental
+
+
+--- rental-mvp/app/crud/__init__.py ---
+"""
+Al importar ``app.crud`` re-exportamos helpers de todos los sub-módulos
+para poder usarlos como ``crud.algo`` sin tener que encadenar paquetes.
+"""
+
+# ───────────────────────────── users ──────────────────────────────────────
+from .user import (           # noqa: F401  (re-export)
+    get_user_by_username,
+    get_user_by_email,        # 🆕
+    create_user,
+    verify_password,
+)
+
+# ───────────────────────────── items ──────────────────────────────────────
+from .item import (           # noqa: F401
+    get_item,
+    get_items,
+    get_items_by_owner,
+    create_item,
+    update_item,
+    delete_item,
+)
+
+# ─────────────────────────── rentals ──────────────────────────────────────
+from .rental import (         # noqa: F401
+    get_rental,
+    get_rentals_by_user,
+    create_rental,
+    mark_returned,
+)
+
+# ───────────────────────── categories ─────────────────────────────────────
+from .category import (       # noqa: F401
+    get_category,
+    get_categories,
+    create_category,
+)
+
+__all__: list[str] = [
+    # users
+    "get_user_by_username",
+    "get_user_by_email",      # 🆕
+    "create_user",
+    "verify_password",
+    # items
+    "get_item",
+    "get_items",
+    "get_items_by_owner",
+    "create_item",
+    "update_item",
+    "delete_item",
+    # rentals
+    "get_rental",
+    "get_rentals_by_user",
+    "create_rental",
+    "mark_returned",
+    # categories
+    "get_category",
+    "get_categories",
+    "create_category",
+]
+
+
+--- rental-mvp/app/crud/item.py ---
+# app/crud/item.py
+from __future__ import annotations
+
+from typing import List, Optional, Tuple
+
+from sqlalchemy import asc, desc, or_
+from sqlalchemy.orm import Session, joinedload
+
+from app.models.models import Category, Item, ItemImage
+from app.schemas.item import ItemCreate, ItemUpdate
+
+# ───────────────────────── helpers privados ────────────────────────────────
+def _get_categories_or_400(db: Session, ids: list[int]) -> list[Category]:
+    """
+    Devuelve la lista de categorías cuyo id esté en *ids* o lanza ValueError
+    si alguna no existe.
+    """
+    cats = db.query(Category).filter(Category.id.in_(ids)).all()
+    if len(cats) != len(ids):
+        missing = set(ids) - {c.id for c in cats}
+        raise ValueError(f"Categoría(s) inexistente(s): {', '.join(map(str, missing))}")
+    return cats
+
+
+def _apply_ordering(query, order_by: str | None, order_dir: str | None):
+    """
+    Aplica la ordenación solicitada.  El frontend envía:
+      · order_by  ∈ {"price", "name"}
+      · order_dir ∈ {"asc", "desc"}
+    """
+    if not order_by:
+        return query  # sin ordenación
+
+    mapping = {
+        "price": Item.price_per_h,
+        "name": Item.name,
+        "id": Item.id,  # comodín por si acaso
+    }
+    column = mapping.get(order_by, Item.id)
+    return query.order_by(asc(column) if order_dir == "asc" else desc(column))
+
+
+# ─────────────────────────────── Lectura ────────────────────────────────────
+def get_item(db: Session, item_id: int) -> Optional[Item]:
+    """
+    Obtiene un ítem por id con categorías **y todas sus imágenes** pre-cargadas.
+    """
+    return (
+        db.query(Item)
+        .options(joinedload(Item.categories), joinedload(Item.images))
+        .filter(Item.id == item_id)
+        .first()
+    )
+
+
+def _build_items_query(
+    db: Session,
+    *,
+    name: Optional[str] = None,
+    min_price: Optional[float] = None,
+    max_price: Optional[float] = None,
+    available: Optional[bool] = None,
+    categories: Optional[List[int]] = None,
+    order_by: Optional[str] = None,
+    order_dir: Optional[str] = None,
+):
+    """
+    Crea la consulta base aplicando filtros dinámicos y la ordenación.
+    """
+    q = db.query(Item).options(joinedload(Item.categories), joinedload(Item.images))
+
+    # ── filtros texto / rango precio / disponibilidad ──────────────────────
+    if name:
+        pattern = f"%{name}%"
+        q = q.filter(or_(Item.name.ilike(pattern), Item.description.ilike(pattern)))
+
+    if min_price is not None:
+        q = q.filter(Item.price_per_h >= min_price)
+
+    if max_price is not None:
+        q = q.filter(Item.price_per_h <= max_price)
+
+    if available is not None:
+        q = q.filter(Item.available == available)
+
+    # ── filtro por categorías (al menos una coincidente) ───────────────────
+    if categories:
+        q = q.filter(Item.categories.any(Category.id.in_(categories)))
+
+    # ── ordenación ─────────────────────────────────────────────────────────
+    return _apply_ordering(q, order_by, order_dir)
+
+
+def get_items(
+    db: Session,
+    skip: int = 0,
+    limit: int = 100,
+    *,
+    name: Optional[str] = None,
+    min_price: Optional[float] = None,
+    max_price: Optional[float] = None,
+    available: Optional[bool] = None,
+    categories: Optional[List[int]] = None,
+    order_by: Optional[str] = None,
+    order_dir: Optional[str] = None,
+) -> Tuple[List[Item], int]:
+    """
+    Devuelve la lista paginada de ítems junto con el total de resultados
+    antes de la paginación (para cabecera X-Total-Count).
+    """
+    q = _build_items_query(
+        db,
+        name=name,
+        min_price=min_price,
+        max_price=max_price,
+        available=available,
+        categories=categories,
+        order_by=order_by,
+        order_dir=order_dir,
+    )
+    total = q.count()
+    items = q.offset(skip).limit(limit).all()
+    return items, total
+
+
+def get_items_by_owner(db: Session, owner_id: int) -> List[Item]:
+    """
+    Lista todos los ítems propiedad de *owner_id* con categorías e imágenes.
+    """
+    return (
+        db.query(Item)
+        .options(joinedload(Item.categories), joinedload(Item.images))
+        .filter(Item.owner_id == owner_id)
+        .all()
+    )
+
+
+# ─────────────────────────────── Escritura ──────────────────────────────────
+def create_item(db: Session, item_in: ItemCreate, owner_id: int) -> Item:
+    """
+    Crea un ítem, vincula categorías e **inserta todas las imágenes**.
+    """
+    # la primera imagen se guarda también en el campo legacy `image_url`
+    main = str(item_in.image_urls[0])
+
+    db_item = Item(
+        name=item_in.name,
+        description=item_in.description,
+        price_per_h=item_in.price_per_h,
+        image_url=main,
+        owner_id=owner_id,
+    )
+
+    # categorías
+    if item_in.categories:
+        db_item.categories = _get_categories_or_400(db, item_in.categories)
+
+    # imágenes (tabla hija)
+    db_item.images = [ItemImage(url=str(url)) for url in item_in.image_urls]
+
+    db.add(db_item)
+    db.commit()
+    db.refresh(db_item)
+    return db_item
+
+
+def update_item(db: Session, item: Item, item_in: ItemUpdate) -> Item:
+    """
+    Actualiza los campos presentes en *item_in* (PATCH).
+    Si se envían nuevas `image_urls` se reemplaza la galería completa.
+    """
+    data = item_in.model_dump(exclude_unset=True, exclude={"categories", "image_urls"})
+    for key, value in data.items():
+        setattr(item, key, value)
+
+    # categorías (si vienen)
+    if item_in.categories is not None:
+        item.categories = _get_categories_or_400(db, item_in.categories)
+
+    # imágenes
+    if item_in.image_urls is not None:
+        item.image_url = str(item_in.image_urls[0])  # sync campo destacado
+        item.images = [ItemImage(url=str(url)) for url in item_in.image_urls]
+
+    db.commit()
+    db.refresh(item)
+    return item
+
+
+def delete_item(db: Session, item: Item) -> None:
+    """Elimina un ítem (y cascada sus imágenes)."""
+    db.delete(item)
+    db.commit()
+
+
+--- rental-mvp/app/crud/user.py ---
+# app/crud/user.py
+from __future__ import annotations
+
+import bcrypt
+from passlib.context import CryptContext
+from sqlalchemy.orm import Session
+
+from app.models.models import User
+from app.schemas.user import UserCreate
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+# ───────────────────────── helpers privados ──────────────────────────────
+
+
+def _hash_password(pwd: str) -> str:
+    """Devuelve el hash seguro de *pwd* usando passlib/bcrypt."""
+    return pwd_context.hash(pwd)
+
+
+# ────────────────────────────── Lectura ───────────────────────────────────
+
+
+def get_user_by_username(db: Session, username: str) -> User | None:
+    """Busca un usuario por *username* (o None si no existe)."""
+    return db.query(User).filter(User.username == username).first()
+
+
+def get_user_by_email(db: Session, email: str) -> User | None:
+    """Busca un usuario por email (o None si no existe)."""
+    return db.query(User).filter(User.email == email).first()
+
+
+# ───────────────────────────── Escritura ──────────────────────────────────
+
+
+def create_user(db: Session, user_in: UserCreate) -> User:
+    """
+    Crea un nuevo usuario con contraseña hasheada y lo devuelve.
+    Lanza IntegrityError si el username/email ya existen.
+    """
+    db_user = User(
+        username=user_in.username,
+        email=user_in.email,
+        hashed_pw=_hash_password(user_in.password),
+    )
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+
+# ──────────────────────── Utilidades varias ──────────────────────────────
+
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """
+    Comprueba que *plain_password* coincide con el hash almacenado.
+    Se usa bcrypt directamente para evitar dependencias implícitas.
+    """
+    try:
+        return bcrypt.checkpw(plain_password.encode(), hashed_password.encode())
+    except Exception:  # noqa: BLE001
+        # bcrypt lanza ValueError si el hash no es válido
+        return False
+
+
+--- rental-mvp/app/core/config.py ---
+# app/core/config.py
+from pydantic_settings import BaseSettings
+
+class Settings(BaseSettings):
+    DATABASE_URL: str           # p. ej. sqlite:///./rental.db
+    SECRET_KEY: str             # usa algo largo y aleatorio
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
+
+    class Config:
+        env_file = ".env"
+
+settings = Settings()
+
+
+--- rental-mvp/app/core/security.py ---
+# app/core/security.py
+from datetime import datetime, timedelta
+from jose import jwt
+from app.core.config import settings
+
+def create_access_token(subject: str) -> str:
+    to_encode = {"sub": subject}
+    expire = datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    to_encode.update({"exp": expire})
+    return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+
+
+--- rental-mvp/app/api/rentals.py ---
+# app/api/rentals.py
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+from typing import List
+
+from app import crud, schemas
+from app.deps import get_db, get_current_user
+
+router = APIRouter()
+
+@router.post("/", response_model=schemas.RentalOut, status_code=status.HTTP_201_CREATED)
+def rent_item(rent_in: schemas.RentalCreate,
+              db: Session = Depends(get_db),
+              current_user=Depends(get_current_user)):
+    # comprueba que el ítem está libre
+    item = crud.get_item(db, rent_in.item_id)
+    if not item or not item.available:
+        raise HTTPException(400, "Item no disponible")
+    return crud.create_rental(db, current_user.id, rent_in)
+
+@router.get("/me", response_model=List[schemas.RentalOut])
+def read_my_rentals(db: Session = Depends(get_db),
+                    current_user=Depends(get_current_user)):
+    return crud.get_rentals_by_user(db, current_user.id)
+
+@router.post("/{rental_id}/return", response_model=schemas.RentalOut)
+def return_item(rental_id: int,
+                db: Session = Depends(get_db),
+                current_user=Depends(get_current_user)):
+    rental = crud.get_rental(db, rental_id)
+    if not rental or rental.renter_id != current_user.id:
+        raise HTTPException(404, "Alquiler no encontrado")
+    return crud.mark_returned(db, rental)
+
+
+--- rental-mvp/app/api/items.py ---
+# app/api/items.py
+from typing import List, Optional
+from urllib.parse import urlencode
+
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    Query,
+    Request,
+    Response,
+    status,
+)
+from sqlalchemy.orm import Session
+
+from app import crud, schemas
+from app.deps import get_db, get_current_user
+
+router = APIRouter()
+
+# ──────────────────────────────── Crear ──────────────────────────────────────
+
+
+@router.post(
+    "/",
+    response_model=schemas.ItemOut,
+    status_code=status.HTTP_201_CREATED,
+)
+def create_item(
+    item_in: schemas.ItemCreate,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user),
+):
+    """
+    Crea un ítem asociado al usuario autenticado.
+    """
+    return crud.create_item(db, item_in, owner_id=current_user.id)
+
+
+# ────────────────────── helpers paginación (RFC-5988) ────────────────────────
+
+
+def _build_pagination_links(
+    request: Request,
+    skip: int,
+    limit: int,
+    total: int,
+    **filters,
+) -> str:
+    """
+    Devuelve la cabecera **Link** con rel="next" y/o rel="prev"
+    siguiendo la RFC-5988.
+    """
+    links: list[str] = []
+
+    # eliminamos skip y limit existentes (solo se permite uno por llamada)
+    base_url = request.url.remove_query_params("skip")
+    base_url = base_url.remove_query_params("limit")
+
+    def _url(new_skip: int) -> str:
+        # ► descartamos filtros cuyo valor sea None para no enviar "None" literal
+        params = {k: v for k, v in filters.items() if v is not None}
+
+        # urlencode con doseq=True para repetir parámetros como categories=1&categories=2
+        params.update({"skip": new_skip, "limit": limit})
+        return f"<{base_url}?{urlencode(params, doseq=True)}>"
+
+    # next
+    if skip + limit < total:
+        links.append(f'{_url(skip + limit)}; rel="next"')
+
+    # prev
+    if skip > 0:
+        prev_skip = max(skip - limit, 0)
+        links.append(f'{_url(prev_skip)}; rel="prev"')
+
+    return ", ".join(links)
+
+
+# ──────────────────────────────── Leer ───────────────────────────────────────
+
+
+@router.get("/", response_model=List[schemas.ItemOut])
+def read_items(
+    request: Request,
+    response: Response,
+    # ------------- paginación -------------
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=1000),
+    # ------------- filtros ---------------
+    name: Optional[str] = None,
+    min_price: Optional[float] = Query(None, ge=0),
+    max_price: Optional[float] = Query(None, ge=0),
+    available: Optional[bool] = None,
+    categories: Optional[List[int]] = Query(    # ← nuevo
+        default=None,
+        description="IDs de categorías (cualquiera de ellas)",
+    ),
+    # ------------- ordenación ------------
+    order_by: Optional[str] = Query(
+        None,
+        pattern="^(price|name|id)$",
+        description="Campo de ordenación ('price'|'name'|'id')",
+    ),
+    order_dir: Optional[str] = Query(
+        None,
+        pattern="^(asc|desc)$",
+        description="Dirección ('asc'|'desc')",
+    ),
+    # dependencia DB
+    db: Session = Depends(get_db),
+):
+    """
+    Lista pública de ítems con filtros, paginación y soporte de ordenación.
+
+    Devuelve además cabeceras **X-Total-Count** y **Link** para facilitar la
+    integración con front-ends SPA.
+    """
+    items, total = crud.get_items(
+        db,
+        skip=skip,
+        limit=limit,
+        name=name,
+        min_price=min_price,
+        max_price=max_price,
+        available=available,
+        categories=categories,
+        order_by=order_by,
+        order_dir=order_dir,
+    )
+
+    # ► cabeceras
+    response.headers["X-Total-Count"] = str(total)
+    if total:
+        link = _build_pagination_links(
+            request,
+            skip,
+            limit,
+            total,
+            name=name,
+            min_price=min_price,
+            max_price=max_price,
+            available=available,
+            categories=categories,
+            order_by=order_by,
+            order_dir=order_dir,
+        )
+        if link:
+            response.headers["Link"] = link
+
+    return items
+
+
+# ───────────────────────── Mis ítems ─────────────────────────────────────────
+
+
+@router.get("/me", response_model=List[schemas.ItemOut])
+def read_my_items(
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user),
+):
+    """
+    Devuelve todos los ítems publicados por el usuario autenticado.
+    """
+    return crud.get_items_by_owner(db, current_user.id)
+
+
+# ──────────────────────────── Actualizar ─────────────────────────────────────
+
+
+@router.patch("/{item_id}", response_model=schemas.ItemOut)
+def partial_update_item(
+    item_id: int,
+    item_in: schemas.ItemUpdate,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user),
+):
+    db_item = crud.get_item(db, item_id)
+    if not db_item or db_item.owner_id != current_user.id:
+        raise HTTPException(404, "Item no encontrado")
+    return crud.update_item(db, db_item, item_in)
+
+
+@router.put("/{item_id}", response_model=schemas.ItemOut)
+def full_update_item(
+    item_id: int,
+    item_in: schemas.ItemCreate,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user),
+):
+    db_item = crud.get_item(db, item_id)
+    if not db_item or db_item.owner_id != current_user.id:
+        raise HTTPException(404, "Item no encontrado")
+    # Reutilizamos la lógica de PATCH convirtiendo ItemCreate → ItemUpdate
+    return crud.update_item(
+        db,
+        db_item,
+        schemas.ItemUpdate(**item_in.model_dump()),
+    )
+
+
+# ──────────────────────────── Eliminar ───────────────────────────────────────
+
+
+@router.delete("/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_item(
+    item_id: int,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user),
+):
+    db_item = crud.get_item(db, item_id)
+    if not db_item or db_item.owner_id != current_user.id:
+        raise HTTPException(404, "Item no encontrado")
+    crud.delete_item(db, db_item)
+
+
+--- rental-mvp/app/api/categories.py ---
+# app/api/categories.py
+from typing import List
+
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+
+from app import crud, schemas
+from app.deps import get_db
+
+# ⬇⬇⬇  ¡SIN prefix aquí!  ⬇⬇⬇
+router = APIRouter(tags=["categories"])
+
+
+@router.get("/", response_model=List[schemas.CategoryOut])
+def list_categories(db: Session = Depends(get_db)):
+    """Lista todas las categorías ordenadas alfabéticamente."""
+    return crud.get_categories(db)
+
+
+@router.post("/", response_model=schemas.CategoryOut,
+             status_code=status.HTTP_201_CREATED)
+def create_category(cat_in: schemas.CategoryCreate,
+                    db: Session = Depends(get_db)):
+    """Crea una nueva categoría (nombre único)."""
+    return crud.create_category(db, cat_in)
+
+
+@router.get("/{cat_id}", response_model=schemas.CategoryOut)
+def get_category(cat_id: int, db: Session = Depends(get_db)):
+    """Obtiene una categoría por ID."""
+    cat = crud.get_category(db, cat_id)
+    if not cat:
+        raise HTTPException(404, "Categoría no encontrada")
+    return cat
+
+
+--- rental-mvp/app/api/auth.py ---
+# app/api/auth.py
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordRequestForm
+from sqlalchemy.orm import Session
+
+from app import crud, schemas
+from app.deps import get_db
+from app.core.security import create_access_token
+from app.schemas.token import Token
+
+router = APIRouter()
+
+
+@router.post("/signup", response_model=schemas.UserOut, status_code=status.HTTP_201_CREATED)
+def signup(user_in: schemas.UserCreate, db: Session = Depends(get_db)):
+    if crud.get_user_by_username(db, user_in.username):
+        raise HTTPException(400, "Nombre de usuario en uso")
+    if crud.get_user_by_email(db, user_in.email):          # 🆕
+        raise HTTPException(400, "Email ya registrado")
+    return crud.create_user(db, user_in)
+
+
+@router.post("/token", response_model=Token)
+def login_for_access_token(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(get_db),
+):
+    user = crud.get_user_by_username(db, form_data.username)
+    if not user or not crud.verify_password(form_data.password, user.hashed_pw):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Usuario o contraseña incorrectos",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token = create_access_token(subject=user.username)
+    return {"access_token": access_token}
+
+
+--- rental-mvp/app/api/__init__.py ---
+# app/api/__init__.py
+# paquete de routers
+
+
+--- rental-mvp/app/api/upload.py ---
+# app/api/upload.py
+import os
+import shutil
+import uuid
+from fastapi import APIRouter, UploadFile, Depends, HTTPException, Request
+from starlette.status import HTTP_201_CREATED
+
+from app.deps import get_current_user
+
+UPLOAD_DIR = "./uploads"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+router = APIRouter()
+
+@router.post("/", status_code=HTTP_201_CREATED)
+async def upload_image(
+    file: UploadFile,
+    request: Request,
+    user=Depends(get_current_user),
+):
+    # ───── validación simple ─────
+    if file.content_type.split("/")[0] != "image":
+        raise HTTPException(status_code=400, detail="Solo se permiten imágenes")
+
+    # ───── guardado en disco ─────
+    ext  = os.path.splitext(file.filename)[1]
+    name = f"{uuid.uuid4()}{ext}"
+    path = os.path.join(UPLOAD_DIR, name)
+
+    with open(path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    # ───── URL pública del archivo ─────
+    # Genera la ruta absoluta basándose en el mount StaticFiles →  /uploads/…
+    url = request.url_for("uploads", path=name)      # http://<host>:<port>/uploads/<uuid>.<ext>
+
+    return {"url": str(url)}
+
+
+--- rental-mvp/tests/test_api.py ---
+import datetime
+from urllib.parse import parse_qs, urlparse
+
+from fastapi import status
+
+
+# ---------------------------------------------------------------------------
+# helpers
+# ---------------------------------------------------------------------------
+
+def _signup(client, username="alice", email="alice@example.com", password="secret"):
+    return client.post(
+        "/api/auth/signup",
+        json={"username": username, "email": email, "password": password},
+    )
+
+
+def _login(client, username="alice", password="secret"):
+    res = client.post(
+        "/api/auth/token",
+        data={"username": username, "password": password},
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
+    )
+    return res.json()["access_token"]
+
+
+# ---------------------------------------------------------------------------
+# auth
+# ---------------------------------------------------------------------------
+
+def test_signup_login(client):
+    r = _signup(client)
+    assert r.status_code == status.HTTP_201_CREATED
+    data = r.json()
+    assert data["username"] == "alice"
+    assert data["email"] == "alice@example.com"
+
+    token = _login(client)
+    assert token, "No se devolvió access_token"
+
+
+# ---------------------------------------------------------------------------
+# items + rentals flow
+# ---------------------------------------------------------------------------
+
+def test_item_crud_and_rental_flow(client):
+    # usuarios
+    _signup(client, "alice", "alice@example.com", "pwd")
+    token_alice = _login(client, "alice", "pwd")
+    auth_alice = {"Authorization": f"Bearer {token_alice}"}
+
+    _signup(client, "bob", "bob@example.com", "pwd")
+    token_bob = _login(client, "bob", "pwd")
+    auth_bob = {"Authorization": f"Bearer {token_bob}"}
+
+    # ► Alice crea un ítem
+    r = client.post(
+        "/api/items/",
+        json={"name": "Taladro Bosch", "description": "800 W", "price_per_h": 4.5},
+        headers=auth_alice,
+    )
+    assert r.status_code == status.HTTP_201_CREATED
+    item_id = r.json()["id"]
+
+    # ► Listado público incluye el ítem
+    r = client.get("/api/items/")
+    assert any(it["id"] == item_id for it in r.json())
+
+    # ► Bob alquila el ítem
+    start = datetime.datetime.utcnow()
+    end = start + datetime.timedelta(hours=2)
+    r = client.post(
+        "/api/rentals/",
+        json={"item_id": item_id, "start_at": start.isoformat(), "end_at": end.isoformat()},
+        headers=auth_bob,
+    )
+    assert r.status_code == status.HTTP_201_CREATED
+    rental = r.json()
+    assert rental["deposit"] == round(2 * 4.5 * 1.2, 2)
+
+    # ► Devolución
+    r = client.post(f"/api/rentals/{rental['id']}/return", headers=auth_bob)
+    assert r.status_code == status.HTTP_200_OK
+    assert r.json()["returned"] is True
+
+
+# ---------------------------------------------------------------------------
+# PUT completo
+# ---------------------------------------------------------------------------
+
+def test_put_full_update_item(client):
+    _signup(client, "neo", "n@e.o", "pwd")
+    token = _login(client, "neo", "pwd")
+    auth = {"Authorization": f"Bearer {token}"}
+
+    # crea
+    r = client.post(
+        "/api/items/",
+        json={"name": "Martillo", "description": "mango madera", "price_per_h": 3},
+        headers=auth,
+    )
+    item_id = r.json()["id"]
+
+    # reemplaza todos los campos
+    r = client.put(
+        f"/api/items/{item_id}",
+        json={"name": "Martillo PRO", "description": "fibra", "price_per_h": 4},
+        headers=auth,
+    )
+    assert r.status_code == status.HTTP_200_OK
+    data = r.json()
+    assert data["name"] == "Martillo PRO"
+    assert data["price_per_h"] == 4
+
+
+# ---------------------------------------------------------------------------
+# nuevas coberturas
+# ---------------------------------------------------------------------------
+
+def test_rental_end_before_start_validation(client):
+    """El esquema debe rechazar end_at ≤ start_at (422 Unprocessable Entity)."""
+    _signup(client, "carl", "c@r.l", "pwd")
+    token = _login(client, "carl", "pwd")
+    auth = {"Authorization": f"Bearer {token}"}
+
+    # necesita un ítem primero
+    r = client.post("/api/items/", json={"name": "Sierra", "price_per_h": 2}, headers=auth)
+    item_id = r.json()["id"]
+
+    now = datetime.datetime.utcnow()
+    r = client.post(
+        "/api/rentals/",
+        json={"item_id": item_id, "start_at": now.isoformat(), "end_at": now.isoformat()},
+        headers=auth,
+    )
+    assert r.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
+
+def test_items_pagination_headers(client):
+    """Verifica `X-Total-Count` y cabecera Link paginada."""
+    _signup(client, "pag", "p@g.e", "pwd")
+    token = _login(client, "pag", "pwd")
+    auth = {"Authorization": f"Bearer {token}"}
+
+    # crea 3 ítems
+    for i in range(3):
+        client.post(
+            "/api/items/",
+            json={"name": f"Item{i}", "price_per_h": 1 + i},
+            headers=auth,
+        )
+
+    # página 1 (2 resultados)
+    r = client.get("/api/items/?skip=0&limit=2")
+    assert r.status_code == 200
+    assert len(r.json()) == 2
+    assert r.headers["X-Total-Count"] == "3"
+    link = r.headers.get("Link")
+    assert link and 'rel="next"' in link
+
+    # parseamos la URL next
+    next_url = link.split(";")[0].strip("<>")
+    qs = parse_qs(urlparse(next_url).query)
+    assert qs["skip"] == ["2"]
+    assert qs["limit"] == ["2"]
+
+    # página 2
+    r2 = client.get(next_url)
+    assert r2.status_code == 200
+    assert len(r2.json()) == 1
+    assert 'rel="prev"' in r2.headers.get("Link", "")
+
+
+--- rental-mvp/tests/conftest.py ---
+"""
+Fixtures de prueba para FastAPI.
+
+Para evitar colisiones entre tests, cada test recibe su propia base SQLite
+en memoria.  Usamos un StaticPool para que todas las peticiones que se
+ejecutan dentro del mismo test compartan la misma conexión.
+"""
+
+import pytest
+from fastapi.testclient import TestClient
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
+
+from app.main import app
+from app.models.database import Base
+from app.deps import get_db
+
+
+@pytest.fixture()
+def db():
+    """
+    Crea una base de datos SQLite en memoria exclusiva para el test
+    y devuelve una sesión SQLAlchemy conectada a ella.
+    """
+    engine = create_engine(
+        "sqlite://",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,           # <<— comparte conexión en el test
+    )
+    Base.metadata.create_all(bind=engine)
+
+    TestingSessionLocal = sessionmaker(
+        autocommit=False,
+        autoflush=False,
+        bind=engine,
+    )
+
+    session = TestingSessionLocal()
+    try:
+        yield session
+    finally:
+        session.close()
+
+
+@pytest.fixture()
+def client(db):
+    """
+    Devuelve un TestClient que usa la sesión `db` anterior para todas
+    las dependencias `get_db` dentro de la app.
+    """
+
+    def override_get_db():
+        try:
+            yield db
+        finally:
+            pass
+
+    # Sobrescribimos la dependencia
+    app.dependency_overrides[get_db] = override_get_db
+
+    with TestClient(app) as c:
+        yield c
+
+
+--- rental-mvp/.pytest_cache/.gitignore ---
+# Created by pytest automatically.
+*
+
+
+--- rental-mvp/.pytest_cache/README.md ---
+# pytest cache directory #
+
+This directory contains data from the pytest's cache plugin,
+which provides the `--lf` and `--ff` options, as well as the `cache` fixture.
+
+**Do not** commit this to version control.
+
+See [the docs](https://docs.pytest.org/en/stable/how-to/cache.html) for more information.
+
+
+--- rental-mvp/.pytest_cache/CACHEDIR.TAG ---
+Signature: 8a477f597d28d172789f06886806bc55
+# This file is a cache directory tag created by pytest.
+# For information about cache directory tags, see:
+#	https://bford.info/cachedir/spec.html
+
+
+--- rental-mvp/.pytest_cache/v/cache/nodeids ---
+[
+  "tests/test_api.py::test_item_crud_and_rental_flow",
+  "tests/test_api.py::test_items_pagination_headers",
+  "tests/test_api.py::test_put_full_update_item",
+  "tests/test_api.py::test_rental_end_before_start_validation",
+  "tests/test_api.py::test_signup_login"
+]
+
+--- rental-mvp/.pytest_cache/v/cache/lastfailed ---
+{}
+
+--- rental-mvp/backend/Dockerfile ---
+FROM python:3.12-slim
+
+# Dependencias de sistema para compilar algunas wheels
+RUN apt-get update && apt-get install -y build-essential libffi-dev git \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY app ./app
+COPY .env .
+COPY uploads ./uploads
+
+EXPOSE 8000
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
 
 
