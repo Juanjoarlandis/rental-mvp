@@ -17,6 +17,7 @@
                     "a08a849a-2bcf-4c62-8f50-320a0d3b843f.jpg",
                     "ebefe732-4f9a-46dd-a033-8072611d8ad9.png",
                     "f528fc74-9c61-432c-a79a-0eb5da4f6b76.png",
+                    "aa787f08-437e-4068-80bf-71d891088c56.png",
                     "5ce5fe11-0cef-4e78-a78b-aa643b94a56d.png"
                 ]
             },
@@ -295,6 +296,34 @@ email-validator
 pytest>=7.4
 httpx>=0.27
 
+--- rental-mvp/docker-compose.prod.yml ---
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    env_file: .env
+    volumes:
+      - uploads:/app/uploads          # imágenes persisten
+      - ./rental.db:/app/rental.db    # sqlite fuera de imagen
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - "80:80"                       # expone HTTP
+    restart: unless-stopped
+
+volumes:
+  uploads:
+
+
 --- rental-mvp/pytest.ini ---
 # pytest.ini
 [pytest]
@@ -306,6 +335,27 @@ addopts = -q
 # .env (en la raíz)
 DATABASE_URL=sqlite:///./rental.db
 SECRET_KEY=tu_clave_super_secreta_aleatoria
+
+
+--- rental-mvp/Dockerfile ---
+# backend/Dockerfile
+FROM python:3.12-slim
+
+# Instala dependencias del SO necesarias para wheel, bcrypt, etc.
+RUN apt-get update && apt-get install -y build-essential libffi-dev git && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copiamos solo el backend y la config; el front se servirá por Nginx
+COPY app ./app
+COPY .env .
+COPY uploads ./uploads          
+
+EXPOSE 8000
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
 
 
 --- rental-mvp/alembic.ini ---
@@ -537,6 +587,53 @@ export default defineConfig({
     }
   }
 });
+
+
+--- rental-mvp/frontend/Dockerfile ---
+# frontend/Dockerfile
+# Etapa 1 – compilación
+FROM node:20 AS builder
+WORKDIR /frontend
+COPY frontend/package.json frontend/package-lock.json* ./
+RUN npm ci
+COPY frontend .
+RUN npm run build           # salida en /frontend/dist
+
+# Etapa 2 – Nginx estático
+FROM nginx:1.27-alpine
+COPY --from=builder /frontend/dist /usr/share/nginx/html
+# Proxy /api → backend
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+
+
+--- rental-mvp/frontend/nginx.conf ---
+server {
+    listen 80;
+    server_name _;
+
+    # estáticos de Vite
+    root /usr/share/nginx/html;
+    index index.html;
+
+    # single-page
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # proxy API
+    location /api/ {
+        proxy_pass http://backend:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+
+    # subidas
+    location /uploads/ {
+        proxy_pass http://backend:8000;
+    }
+}
 
 
 --- rental-mvp/frontend/tsconfig.json ---
@@ -1159,22 +1256,22 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
 
 
 --- rental-mvp/frontend/src/features/items/ItemList.tsx ---
-import { useEffect, useMemo, useRef, useState } from "react";
-import axios from "axios";
-import Container from "../../components/shared/Container";
-import ItemCard from "../../components/ui/ItemCard";
-import SkeletonCard from "../../components/ui/SkeletonCard";
-import FiltersSidebar from "../../components/filters/FiltersSidebar";
-import { useItems } from "./useItems";
-import { useAuth } from "../../hooks/useAuth";
-import AddItemModal from "./AddItemModal";          // 🆕
+import { useEffect, useMemo, useRef, useState } from 'react';
+import axios from 'axios';
+import Container from '../../components/shared/Container';
+import ItemCard from '../../components/ui/ItemCard';
+import SkeletonCard from '../../components/ui/SkeletonCard';
+import FiltersSidebar from '../../components/filters/FiltersSidebar';
+import { useItems } from './useItems';
+import { useAuth } from '../../hooks/useAuth';
+import AddItemModal from './AddItemModal';
 
 type FiltersT = {
   name?: string;
   min_price?: number;
   max_price?: number;
   categories?: number[];
-  order?: "price_asc" | "price_desc" | "name";
+  order?: 'price_asc' | 'price_desc' | 'name';
 };
 
 export default function ItemList() {
@@ -1183,15 +1280,15 @@ export default function ItemList() {
   const params = useMemo(() => {
     const p = new URLSearchParams();
     Object.entries(filters).forEach(([k, v]) => {
-      if (v === undefined || v === "") return;
+      if (v === undefined || v === '') return;
       if (Array.isArray(v)) v.forEach(val => p.append(k, String(val)));
       else p.set(k, String(v));
     });
     // orden
     if (filters.order) {
-      const [field, dir] = filters.order.split("_");
-      p.set("order_by", field === "price" ? "price" : "name");
-      p.set("order_dir", dir);
+      const [field, dir] = filters.order.split('_');
+      p.set('order_by', field === 'price' ? 'price' : 'name');
+      p.set('order_dir', dir);
     }
     return p;
   }, [filters]);
@@ -1209,7 +1306,7 @@ export default function ItemList() {
           // aquí podrías aumentar skip y llamar a refetch, si tu API lo soporta
         }
       },
-      { rootMargin: "600px" }
+      { rootMargin: '600px' }
     );
     ob.observe(sentinel.current);
     return () => ob.disconnect();
@@ -1222,7 +1319,7 @@ export default function ItemList() {
   async function handleAdd(name: string, price: number) {
     if (!token) return;
     await axios.post(
-      "/api/items/",
+      '/api/items/',
       { name, price_per_h: price },
       { headers: { Authorization: `Bearer ${token}` } }
     );
@@ -1282,7 +1379,11 @@ export default function ItemList() {
 
 /* ---------- helpers ---------- */
 const Grid = ({ children }: { children: React.ReactNode }) => (
-  <div className="grid grid-cols-[repeat(auto-fill,minmax(15rem,1fr))] gap-6 py-6">
+  <div
+    className="grid justify-center                 /* centra cuando sobran huecos */
+           grid-cols-[repeat(auto-fill,minmax(15rem,1fr))]
+           gap-6 py-6"
+  >
     {children}
   </div>
 );
@@ -1750,16 +1851,24 @@ export default function ItemCard({ item }: { item: Item }) {
 
   /* URL de la imagen: si el ítem trae `image_url` usamos esa;
      si no, caemos al placeholder de Unsplash. */
-const imgSrc = resolveImage(
-   item.image_url,
+  const imgSrc = resolveImage(
+    item.image_url,
     `https://source.unsplash.com/640x480/?${encodeURIComponent(item.name)}`
   );
 
   return (
     <>
-      <article className="group flex flex-col overflow-hidden rounded-lg bg-surface shadow-card transition-transform duration-200 hover:-translate-y-1 hover:shadow-cardHover">
+      {/* max-w para que nunca “reviente” el layout si solo hay 1 tarjeta */}
+      <article
+        className="group flex w-full max-w-[15rem] flex-col overflow-hidden
+                   rounded-lg bg-surface shadow-card transition-transform duration-200
+                   hover:-translate-y-1 hover:shadow-cardHover mx-auto"
+      >
         {/* ─────────── Imagen + overlays ─────────── */}
-        <div className="relative cursor-pointer" onClick={() => setOpen(true)}>
+        <div
+          className="relative cursor-pointer"
+          onClick={() => setOpen(true)}
+        >
           <LazyImage
             src={imgSrc}
             alt={item.name}
@@ -1822,7 +1931,7 @@ const imgSrc = resolveImage(
 function IconBtn({
   children,
   onClick,
-  title,
+  title
 }: {
   children: React.ReactNode;
   onClick?: () => void;

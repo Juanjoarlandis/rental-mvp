@@ -10,6 +10,7 @@
                     "3d304b92-4fce-4616-a08f-b74313d0008c.png",
                     "2a373a03-bd9c-4d50-93bc-e546e44bd6f1.png",
                     "41671a81-0d71-4490-9dd9-1629cd2811ee.png",
+                    "013d8629-ca65-48d5-85b5-44572aec0ab6.png",
                     "282022c2-0d6d-4f87-bcc9-ecd08d43a362.png",
                     "249e28c1-feb7-4a38-a488-3bea7af0c2fd.png",
                     "570df2ae-13d6-4156-968d-6cde19da881d.png",
@@ -141,6 +142,8 @@
                     "index.html",
                     "package.json",
                     "vite.config.ts",
+                    "Dockerfile",
+                    "nginx.conf",
                     "tsconfig.json",
                     "postcss.config.js",
                     "tailwind.config.js"
@@ -243,8 +246,10 @@
         "files": [
             "estructura_directorios.json",
             "requirements.txt",
+            "docker-compose.prod.yml",
             "pytest.ini",
             ".env",
+            "Dockerfile",
             "rental.db",
             "alembic.ini"
         ]

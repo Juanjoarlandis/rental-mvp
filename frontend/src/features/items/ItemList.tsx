@@ -122,18 +122,10 @@ export default function ItemList() {
 /* ---------- helpers ---------- */
 const Grid = ({ children }: { children: React.ReactNode }) => (
   <div
-    className="grid justify-center                 /* centra cuando sobran huecos */
-           grid-cols-[repeat(auto-fill,minmax(15rem,1fr))]
-           gap-6 py-6"
+    /* columnas exactas de 15 rem, centradas */
+    className="mx-auto grid justify-center gap-6 py-6
+               [grid-template-columns:repeat(auto-fill,15rem)]"
   >
     {children}
   </div>
-);
-
-const GridSkeleton = () => (
-  <Grid>
-    {Array.from({ length: 8 }).map((_, i) => (
-      <SkeletonCard key={i} />
-    ))}
-  </Grid>
 );
