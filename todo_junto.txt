@@ -212,10 +212,14 @@ module.exports = {
 --- frontend/src/App.tsx ---
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Suspense } from "react";
 
+import ErrorBoundary from "./ErrorBoundary";
 import { AuthProvider } from "./hooks/useAuth";
+
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
+
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -231,25 +235,33 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <BrowserRouter>
-          <Header />
+          <ErrorBoundary>
+            <Header />
 
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-
-            {/*  RUTA SEGURA  */}
-            <Route
-              path="/dashboard"
-              element={
-                <Protected>
-                  <Dashboard />
-                </Protected>
+            <Suspense
+              fallback={
+                <p className="py-32 text-center text-gray-500">Cargando…</p>
               }
-            />
-          </Routes>
+            >
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
 
-          <Footer />
+                {/*  RUTA SEGURA  */}
+                <Route
+                  path="/dashboard"
+                  element={
+                    <Protected>
+                      <Dashboard />
+                    </Protected>
+                  }
+                />
+              </Routes>
+            </Suspense>
+
+            <Footer />
+          </ErrorBoundary>
         </BrowserRouter>
       </AuthProvider>
     </QueryClientProvider>
@@ -272,6 +284,42 @@ api.interceptors.request.use(cfg => {
   if (token) cfg.headers.Authorization = `Bearer ${token}`;
   return cfg;
 });
+
+
+--- frontend/src/ErrorBoundary.tsx ---
+import React, { ErrorInfo, ReactNode } from "react";
+
+type Props = { children: ReactNode };
+type State = { hasError: boolean };
+
+class ErrorBoundary extends React.Component<Props, State> {
+  state: State = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, info: ErrorInfo) {
+    // Aquí podrías enviar logs a Sentry, LogRocket, etc.
+    console.error("⛔ Unhandled error:", error, info);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <main className="flex min-h-[60vh] items-center justify-center">
+          <p className="rounded-md bg-red-50 p-6 text-center text-lg text-red-600 shadow">
+            ¡Ups! Algo ha ido mal.<br />
+            Intenta recargar la página.
+          </p>
+        </main>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+export default ErrorBoundary;
 
 
 --- frontend/src/main.tsx ---
@@ -452,23 +500,19 @@ export async function login(username: string, password: string): Promise<string>
 
 
 --- frontend/src/features/categories/useCategories.ts ---
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useQuery } from "@tanstack/react-query";
+import { api } from "../../api";
 
 export type Category = { id: number; name: string };
 
 export default function useCategories() {
-  const [data, setData] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data, isLoading } = useQuery<Category[]>({
+    queryKey: ["categories"],
+    queryFn: () => api.get<Category[]>("/categories/").then(r => r.data),
+    staleTime: 5 * 60_000 // 5 min
+  });
 
-  useEffect(() => {
-    axios
-      .get<Category[]>('/api/categories/')
-      .then(r => setData(r.data))
-      .finally(() => setLoading(false));
-  }, []);
-
-  return { data, loading };
+  return { data: data ?? [], loading: isLoading };
 }
 
 
@@ -501,16 +545,20 @@ export function useItems(params?: URLSearchParams) {
 
 
 --- frontend/src/features/items/AddItemModal.tsx ---
+/* -------------------------------------------------------------------------- */
+/*  src/features/items/AddItemModal.tsx                                       */
+/* -------------------------------------------------------------------------- */
 import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon, PhotoIcon } from "@heroicons/react/24/outline";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import toast from "react-hot-toast";
+
 import useCategories, { Category } from "../categories/useCategories";
 import { useAuth } from "../../hooks/useAuth";
+import { api } from "../../api";
 
 /* -------------------------------------------------------------------------- */
 /*                               schema + types                               */
@@ -541,6 +589,8 @@ type Props = {
 };
 
 /* -------------------------------------------------------------------------- */
+/*                           Componente principal                             */
+/* -------------------------------------------------------------------------- */
 
 export default function AddItemModal({ open, onClose, onCreated }: Props) {
   const { data: cats } = useCategories();
@@ -558,7 +608,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
     defaultValues: { categories: [] }
   });
 
-  /* preview de imagen ------------------------------------------------------ */
+  /* --------------------------- preview de imagen -------------------------- */
   const file = watch("image");
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -571,7 +621,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
     setPreview(null);
   }, [file]);
 
-  /* submit ----------------------------------------------------------------- */
+  /* ------------------------------- submit --------------------------------- */
   async function onSubmit(data: FormData) {
     if (!token) {
       toast.error("Debes haber iniciado sesión");
@@ -583,31 +633,24 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
       if (data.image) {
         const fd = new FormData();
         fd.append("file", data.image);
-        const up = await axios.post<{ url: string }>("/api/upload/", fd, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data"
-          }
+        const up = await api.post<{ url: string }>("/upload/", fd, {
+          headers: { "Content-Type": "multipart/form-data" }
         });
         image_url = up.data.url;
       }
 
       /* 2.- creamos ítem */
-      await axios.post(
-        "/api/items/",
-        {
-          name: data.name,
-          description: data.description,
-          price_per_h: data.price_per_h,
-          categories: data.categories,
-          image_url
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await api.post("/items/", {
+        name: data.name,
+        description: data.description,
+        price_per_h: data.price_per_h,
+        categories: data.categories,
+        image_url
+      });
 
       toast.success("¡Producto publicado!");
       reset();          // limpia formulario
-      onCreated();      // refresca lista en parent
+      onCreated();      // refresca listado en el padre
       onClose();        // cierra modal
     } catch (err: any) {
       console.error(err);
@@ -615,7 +658,9 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
     }
   }
 
-  /* interfaz ---------------------------------------------------------------- */
+  /* ------------------------------------------------------------------------ */
+  /*                                 UI                                       */
+  /* ------------------------------------------------------------------------ */
 
   return (
     <Transition show={open} as={Fragment}>
@@ -626,7 +671,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
         }}
         className="relative z-50"
       >
-        {/* backdrop */}
+        {/* ---------- Backdrop ---------- */}
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-200"
@@ -639,7 +684,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
           <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
         </Transition.Child>
 
-        {/* panel */}
+        {/* ---------- Panel ---------- */}
         <div className="fixed inset-0 grid place-items-center p-4">
           <Transition.Child
             as={Fragment}
@@ -650,13 +695,14 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
             leaveFrom="scale-100 opacity-100"
             leaveTo="scale-95 opacity-0"
           >
-            <Dialog.Panel className="max-w-2xl w-full overflow-hidden rounded-xl bg-white shadow-xl">
-              {/* header */}
+            <Dialog.Panel className="w-full max-w-2xl overflow-hidden rounded-xl bg-white shadow-xl">
+              {/* Header */}
               <div className="flex items-center justify-between border-b px-6 py-4">
                 <Dialog.Title className="text-lg font-semibold">
                   Nuevo producto
                 </Dialog.Title>
                 <button
+                  type="button"
                   className="rounded p-1 text-gray-500 hover:bg-gray-100"
                   onClick={() => {
                     reset();
@@ -667,13 +713,14 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
                 </button>
               </div>
 
-              {/* form */}
+              {/* Form */}
               <form
                 onSubmit={handleSubmit(onSubmit)}
                 className="grid gap-6 px-6 py-8 md:grid-cols-2"
               >
-                {/* ---- columna 1 ---- */}
+                {/* --------------------------- Columna 1 --------------------------- */}
                 <div className="space-y-4">
+                  {/* Nombre */}
                   <div>
                     <label className="block text-sm font-medium">Nombre</label>
                     <input
@@ -688,6 +735,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
                     )}
                   </div>
 
+                  {/* Descripción */}
                   <div>
                     <label className="block text-sm font-medium">
                       Descripción
@@ -705,6 +753,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
                     )}
                   </div>
 
+                  {/* Precio */}
                   <div>
                     <label className="block text-sm font-medium">
                       Precio / hora (€)
@@ -723,9 +772,9 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
                   </div>
                 </div>
 
-                {/* ---- columna 2 ---- */}
+                {/* --------------------------- Columna 2 --------------------------- */}
                 <div className="space-y-4">
-                  {/* imagen ------------------------------------------------ */}
+                  {/* Imagen */}
                   <div>
                     <label className="block text-sm font-medium">Imagen</label>
 
@@ -739,7 +788,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
                       ) : (
                         <span className="flex flex-col items-center gap-1">
                           <PhotoIcon className="h-8 w-8" />
-                          <span>PNG, JPG, máx. 5 MB</span>
+                          <span>PNG, JPG · máx. 5 MB</span>
                         </span>
                       )}
                       <input
@@ -758,7 +807,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
                     )}
                   </div>
 
-                  {/* categorías ------------------------------------------ */}
+                  {/* Categorías */}
                   <div>
                     <p className="mb-1 text-sm font-medium">Categorías</p>
                     <div className="flex flex-wrap gap-2">
@@ -794,7 +843,7 @@ export default function AddItemModal({ open, onClose, onCreated }: Props) {
                   </div>
                 </div>
 
-                {/* ---- footer ---- */}
+                {/* Footer */}
                 <div className="md:col-span-2 flex justify-end gap-3">
                   <button
                     type="button"
@@ -1356,41 +1405,77 @@ export default function Dashboard() {
 
 --- frontend/src/pages/Home.tsx ---
 import { Link } from 'react-router-dom';
-import { ArrowRightIcon } from '@heroicons/react/24/solid';
+import { ArrowRightIcon, PlusIcon } from '@heroicons/react/24/solid';
 import Container from '../components/shared/Container';
 import Section from '../components/shared/Section';
+import Stats from '../components/home/Stats';
+import LogoCloud from '../components/home/LogoCloud';
+import Testimonials from '../components/home/Testimonials';
+import FAQ from '../components/home/FAQ';
 
 export default function Home() {
   return (
     <>
-      {/* HERO */}
-      <section className="relative overflow-hidden bg-brand text-white">
+      {/* ---------- HERO ---------- */}
+      <section className="relative isolate overflow-hidden bg-brand text-white">
+        {/* background blur blob */}
+        <span className="pointer-events-none absolute -top-16 left-1/2 -z-10 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-white/10 blur-3xl" />
+
         <Container>
-          <div className="flex min-h-[60vh] flex-col items-center justify-center gap-6 py-24 text-center">
+          <div className="flex min-h-[70vh] flex-col items-center justify-center gap-6 py-28 text-center">
             <h1 className="max-w-3xl text-balance text-5xl font-extrabold leading-tight">
-              Alquila y gana dinero con tus herramientas que no usas a diario
+              Dónde tus cosas <br className="hidden sm:inline" />
+              <span className="text-white/80">cambian de mano</span>
             </h1>
+
             <p className="max-w-xl text-lg/relaxed text-white/90">
-              Conecta con gente de tu zona, protege tus transacciones y ahorra comprando.
+              Alquila herramientas, gadgets o equipamiento deportivo y monetiza lo
+              que ya tienes. ¡Conecta con tu barrio y ahorra al planeta!
             </p>
-            <Link to="/dashboard" className="btn inline-flex gap-2">
-              Explorar catálogo <ArrowRightIcon className="h-5 w-5" />
-            </Link>
+
+            <div className="flex flex-wrap justify-center gap-4">
+              <Link to="/dashboard" className="btn inline-flex gap-2">
+                Explorar catálogo <ArrowRightIcon className="h-5 w-5" />
+              </Link>
+              <Link to="/dashboard#add" className="btn--ghost inline-flex gap-2">
+                <PlusIcon className="h-5 w-5" />
+                Publicar mi primer ítem
+              </Link>
+            </div>
           </div>
         </Container>
+
+        {/* wave separator */}
+        <svg
+          aria-hidden
+          viewBox="0 0 1440 120"
+          className="block w-full text-brand"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M0,96L48,106.7C96,117,192,139,288,128C384,117,480,75,576,58.7C672,43,768,53,864,74.7C960,96,1056,128,1152,138.7C1248,149,1344,139,1392,133.3L1440,128L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"
+            className="fill-white"
+          />
+        </svg>
       </section>
 
-      {/* HOW IT WORKS */}
+      {/* ---------- STATS ---------- */}
+      <Stats />
+
+      {/* ---------- LOGO CLOUD ---------- */}
+      <LogoCloud />
+
+      {/* ---------- CÓMO FUNCIONA ---------- */}
       <Section title="¿Cómo funciona?">
         <Container>
           <div className="grid gap-12 md:grid-cols-3">
             {[
-              ['Publica', 'Sube tu producto y fija tu precio.'],
-              ['Reserva', 'Los usuarios reservan y pagan la fianza.'],
-              ['Gana', 'Entrega el ítem y recibe tu dinero.']
+              ['Publica', 'Sube tu producto, ponle precio y límites de uso.'],
+              ['Reserva', 'Los usuarios pagan la fianza y reservan al instante.'],
+              ['Gana', 'Entregas el ítem, recibes el pago y valoraciones ⭐'],
             ].map(([t, d]) => (
               <div key={t} className="space-y-3 text-center">
-                <div className="mx-auto h-12 w-12 rounded-full bg-brand/10" />
+                <div className="mx-auto h-14 w-14 rounded-full bg-brand/10" />
                 <h3 className="text-xl font-semibold">{t}</h3>
                 <p className="text-gray-600">{d}</p>
               </div>
@@ -1398,6 +1483,24 @@ export default function Home() {
           </div>
         </Container>
       </Section>
+
+      {/* ---------- TESTIMONIOS ---------- */}
+      <Testimonials />
+
+      {/* ---------- FAQ ---------- */}
+      <FAQ />
+
+      {/* ---------- CTA FINAL ---------- */}
+      <section className="bg-brand py-16 text-center text-white">
+        <Container>
+          <h2 className="mb-6 text-3xl font-bold">
+            ¿Listo para estrenar ingresos extra?
+          </h2>
+          <Link to="/register" className="btn">
+            Crear cuenta gratis
+          </Link>
+        </Container>
+      </section>
     </>
   );
 }
@@ -1888,6 +1991,188 @@ export default function Header() {
       </div>
     </header>
   );
+}
+
+
+--- frontend/src/components/Home/FAQ.tsx ---
+import { Disclosure } from '@headlessui/react';
+import { ChevronUpIcon } from '@heroicons/react/24/outline';
+import Container from '../shared/Container';
+
+const FAQS = [
+  ['¿Cómo se gestionan los pagos?', 'Usamos Stripe Connect para retener la fianza y liberar el pago una vez devuelto el ítem.'],
+  ['¿Qué pasa si mi herramienta se daña?', 'Dispones de un seguro opcional a todo riesgo y sistema de valoraciones para vetar a malos usuarios.'],
+  ['¿Puedo cancelar una reserva?', 'Sí, hasta 12 h antes sin penalización.'],
+  ['¿Hay comisión?', 'Solo cobramos un 8 % al propietario cuando se confirma el alquiler.']
+];
+
+export default function FAQ() {
+  return (
+    <section className="bg-gray-50 py-16">
+      <Container>
+        <h2 className="mb-8 text-center text-3xl font-bold">Preguntas frecuentes</h2>
+
+        <div className="mx-auto max-w-3xl space-y-4">
+          {FAQS.map(([q, a]) => (
+            <Disclosure key={q}>
+              {({ open }) => (
+                <>
+                  <Disclosure.Button className="flex w-full items-center justify-between rounded-md bg-white px-4 py-3 text-left text-sm font-medium shadow">
+                    {q}
+                    <ChevronUpIcon
+                      className={`h-5 w-5 transition-transform ${open ? 'rotate-180' : ''}`}
+                    />
+                  </Disclosure.Button>
+                  <Disclosure.Panel className="px-4 pt-2 text-sm text-gray-600">
+                    {a}
+                  </Disclosure.Panel>
+                </>
+              )}
+            </Disclosure>
+          ))}
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+
+--- frontend/src/components/Home/Stats.tsx ---
+import { useEffect, useRef, useState } from 'react';
+import Container from '../shared/Container';
+
+const DATA = [
+  { label: 'Ítems publicados', value: 3124 },
+  { label: 'Usuarios registrados', value: 857 },
+  { label: '€ ahorrados', value: 24367 }
+];
+
+export default function Stats() {
+  /* animate on scroll into view */
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => e.isIntersecting && setVisible(true),
+      { threshold: 0.4 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <section ref={ref} className="bg-white py-12">
+      <Container>
+        <div className="grid gap-8 sm:grid-cols-3">
+          {DATA.map(({ label, value }) => (
+            <div key={label} className="text-center">
+              <p className="text-4xl font-extrabold text-brand">
+                {visible ? value.toLocaleString() : '0'}
+              </p>
+              <p className="mt-2 text-sm font-medium text-gray-600">{label}</p>
+            </div>
+          ))}
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+
+--- frontend/src/components/Home/LogoCloud.tsx ---
+import Container from '../shared/Container';
+
+const LOGOS = [
+  'https://dummyimage.com/160x60/cccccc/ffffff?text=Bosch',
+  'https://dummyimage.com/160x60/cccccc/ffffff?text=Makita',
+  'https://dummyimage.com/160x60/cccccc/ffffff?text=Black+%26+Decker',
+  'https://dummyimage.com/160x60/cccccc/ffffff?text=Dewalt',
+  'https://dummyimage.com/160x60/cccccc/ffffff?text=GoPro',
+  'https://dummyimage.com/160x60/cccccc/ffffff?text=Xiaomi'
+];
+
+export default function LogoCloud() {
+  return (
+    <SectionWrapper>
+      <Container>
+        <div className="grid grid-cols-2 items-center gap-8 opacity-70 sm:grid-cols-3 lg:grid-cols-6">
+          {LOGOS.map(src => (
+            <img
+              key={src}
+              src={src}
+              alt=""
+              className="mx-auto h-12 w-auto object-contain grayscale"
+              loading="lazy"
+            />
+          ))}
+        </div>
+      </Container>
+    </SectionWrapper>
+  );
+}
+
+function SectionWrapper({ children }: { children: React.ReactNode }) {
+  return <section className="bg-gray-50 py-12">{children}</section>;
+}
+
+
+--- frontend/src/components/Home/Testimonials.tsx ---
+import Container from '../shared/Container';
+
+const TESTIMONIALS = [
+  {
+    name: 'Laura P.',
+    text: 'Alquilé mi cámara reflex y pagué las vacaciones. ¡Súper fácil!',
+    avatar: 'https://source.unsplash.com/48x48/?woman,face'
+  },
+  {
+    name: 'Carlos G.',
+    text: 'Encontré un taladro a 5 € y no tuve que comprar uno nuevo.',
+    avatar: 'https://source.unsplash.com/48x48/?man,face'
+  },
+  {
+    name: 'Marta S.',
+    text: 'Me encanta la seguridad del pago con fianza. Repetiré.',
+    avatar: 'https://source.unsplash.com/48x48/?lady,face'
+  }
+];
+
+export default function Testimonials() {
+  return (
+    <SectionWrapper>
+      <Container>
+        <h2 className="mb-10 text-center text-3xl font-bold">Historias reales</h2>
+
+        {/* slider */}
+        <div className="flex snap-x gap-6 overflow-x-auto pb-4 sm:justify-center">
+          {TESTIMONIALS.map(t => (
+            <article
+              key={t.name}
+              className="snap-center shrink-0 rounded-xl bg-white p-6 shadow-card sm:w-80"
+            >
+              <div className="flex items-center gap-3">
+                <img
+                  src={t.avatar}
+                  alt=""
+                  className="h-10 w-10 rounded-full object-cover"
+                  loading="lazy"
+                />
+                <p className="font-semibold">{t.name}</p>
+              </div>
+              <p className="mt-4 text-sm text-gray-600">“{t.text}”</p>
+            </article>
+          ))}
+        </div>
+      </Container>
+    </SectionWrapper>
+  );
+}
+
+function SectionWrapper({ children }: { children: React.ReactNode }) {
+  return <section className="bg-white py-16">{children}</section>;
 }
 
 

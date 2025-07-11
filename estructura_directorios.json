@@ -106,6 +106,16 @@
                                 ]
                             },
                             {
+                                "name": "Home",
+                                "dirs": [],
+                                "files": [
+                                    "FAQ.tsx",
+                                    "Stats.tsx",
+                                    "LogoCloud.tsx",
+                                    "Testimonials.tsx"
+                                ]
+                            },
+                            {
                                 "name": "filters",
                                 "dirs": [],
                                 "files": [
@@ -119,6 +129,7 @@
                 "files": [
                     "App.tsx",
                     "api.ts",
+                    "ErrorBoundary.tsx",
                     "main.tsx",
                     "utils.ts",
                     "Protected.tsx"
