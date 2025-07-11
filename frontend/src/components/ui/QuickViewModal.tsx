@@ -13,8 +13,10 @@ type Props = {
 };
 
 export default function QuickViewModal({ open, onClose, item }: Props) {
+  /* -------- si aún no hay datos -------- */
   if (!item) return null;
 
+  /* -------- URL de la imagen -------- */
   const imgSrc = resolveImage(
     item.image_url,
     `https://source.unsplash.com/800x600/?${encodeURIComponent(item.name)}`
@@ -23,7 +25,7 @@ export default function QuickViewModal({ open, onClose, item }: Props) {
   return (
     <Transition show={open} as={Fragment}>
       <Dialog onClose={onClose} className="relative z-50">
-        {/* ─────── Backdrop ─────── */}
+        {/* ---------------- Backdrop ---------------- */}
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-200"
@@ -36,7 +38,7 @@ export default function QuickViewModal({ open, onClose, item }: Props) {
           <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
         </Transition.Child>
 
-        {/* ─────── Panel ─────── */}
+        {/* ---------------- Panel ---------------- */}
         <div className="fixed inset-0 grid place-items-center p-4">
           <Transition.Child
             as={Fragment}
@@ -49,52 +51,50 @@ export default function QuickViewModal({ open, onClose, item }: Props) {
           >
             <Dialog.Panel
               className="
-                w-full max-w-3xl overflow-hidden rounded-xl bg-white shadow-xl
-                max-h-[90vh]                        /* ← evita que se salga */
-                flex flex-col
+                flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden
+                rounded-xl bg-white shadow-xl
               "
             >
-              {/* ───── Header ───── */}
+              {/* ---------- Header ---------- */}
               <div className="flex items-center justify-between border-b p-4">
                 <Dialog.Title className="text-lg font-semibold">
                   {item.name}
                 </Dialog.Title>
                 <button
-                  className="rounded p-1 text-gray-500 hover:bg-gray-100"
                   onClick={onClose}
+                  className="rounded p-1 text-gray-500 hover:bg-gray-100"
                 >
                   <XMarkIcon className="h-5 w-5" />
                 </button>
               </div>
 
-              {/* ───── Body ───── */}
+              {/* ---------- Body ---------- */}
               <div
                 className="
-                  grid gap-6 p-6
-                  md:grid-cols-2                        /* split desde md */
-                  overflow-y-auto                       /* scroll interno */
+                  grid gap-6 overflow-y-auto p-6
+                  md:grid-cols-2                    /* 1 col → xs-sm | 2 col → ≥ md */
                 "
               >
-                {/* ─── Imagen ─── */}
+                {/* ----- Imagen ----- */}
                 <div className="flex items-center justify-center">
                   <LazyImage
                     src={imgSrc}
                     alt={item.name}
                     className="
                       w-full rounded-lg object-contain
-                      max-h-[60vh]                       /* ≤ 60 % pantalla */
+                      max-h-[60vh]                 /* nunca se sale de la viewport */
                     "
                   />
                 </div>
 
-                {/* ─── Info ─── */}
+                {/* ----- Info ----- */}
                 <div className="flex flex-col gap-4">
-                  {/* precio */}
+                  {/* Precio */}
                   <p className="text-2xl font-bold text-brand">
                     {item.price_per_h.toFixed(2)} €/h
                   </p>
 
-                  {/* rating DEMO */}
+                  {/* Rating (demo) */}
                   <div className="flex items-center gap-1">
                     {Array.from({ length: 5 }).map((_, i) => (
                       <StarIcon
@@ -110,7 +110,7 @@ export default function QuickViewModal({ open, onClose, item }: Props) {
                     <span className="ml-1 text-sm text-gray-500">(4,0)</span>
                   </div>
 
-                  {/* descripción */}
+                  {/* Descripción */}
                   {item.description ? (
                     <p className="prose max-w-none text-sm leading-relaxed">
                       {item.description}
@@ -119,8 +119,8 @@ export default function QuickViewModal({ open, onClose, item }: Props) {
                     <p className="text-sm text-gray-500">Sin descripción.</p>
                   )}
 
-                  {/* categorías */}
-                  {item.categories?.length && (
+                  {/* Categorías */}
+                  {item.categories?.length ? (
                     <div className="flex flex-wrap gap-2">
                       {item.categories.map(c => (
                         <span
@@ -131,7 +131,7 @@ export default function QuickViewModal({ open, onClose, item }: Props) {
                         </span>
                       ))}
                     </div>
-                  )}
+                  ) : null}
 
                   {/* CTA */}
                   <button className="btn mt-auto w-full">Reservar ahora</button>

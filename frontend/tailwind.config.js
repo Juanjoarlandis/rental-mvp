@@ -2,6 +2,16 @@
 module.exports = {
     content: ['./index.html', './src/**/*.{ts,tsx}'],
     theme: {
+        //   ↓↓↓ breakpoints fluidos
+        screens: {
+            xs: '375px',
+            sm: '640px',
+            md: '768px',
+            lg: '1024px',
+            xl: '1280px',
+            '2xl': '1440px',
+            '3xl': '1920px'
+        },
         container: { center: true, padding: '1rem' },
         extend: {
             fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
@@ -18,6 +28,7 @@ module.exports = {
     plugins: [
         require('@tailwindcss/forms'),
         require('@tailwindcss/typography'),
-        require('@tailwindcss/line-clamp')       //  ← NEW
+        require('@tailwindcss/line-clamp'),
+        require('@tailwindcss/container-queries') // 🆕
     ]
 };
