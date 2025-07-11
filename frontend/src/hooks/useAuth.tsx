@@ -1,11 +1,13 @@
 import React, { createContext, useContext, useState } from "react";
 
+/* ------------------------------------------------------------------ */
+/*                       Contexto & proveedor                         */
+/* ------------------------------------------------------------------ */
 type AuthContextT = {
   token: string | null;
   login: (t: string) => void;
   logout: () => void;
 };
-
 const AuthContext = createContext<AuthContextT | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -32,8 +34,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
+/* ------------------------------------------------------------------ */
+/*                           Hooks util                               */
+/* ------------------------------------------------------------------ */
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error("useAuth debe usarse dentro de <AuthProvider>");
   return ctx;
 };
+
+/** Lee el token directo de localStorage (válido fuera de React). */
+export const getTokenLS = () => localStorage.getItem("token");

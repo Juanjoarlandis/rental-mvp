@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "../../api";
 
 export type Item = {
   id: number;
@@ -7,25 +7,19 @@ export type Item = {
   description?: string;
   price_per_h: number;
   available: boolean;
-  image_url?: string;          // 🆕  ← añade la propiedad
+  image_url?: string;
   categories?: { id: number; name: string }[];
 };
 
-
 export function useItems(params?: URLSearchParams) {
-  const [data, setData] = useState<Item[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [reload, setReload] = useState(0);
+  const queryKey = ["items", params?.toString() ?? ""];
 
-  useEffect(() => {
-    setLoading(true);
-    axios
-      .get<Item[]>("/api/items/", { params })
-      .then(res => setData(res.data))
-      .catch(console.error)
-      .finally(() => setLoading(false));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params?.toString(), reload]);
+  const { data, isLoading, refetch } = useQuery<Item[]>({
+    queryKey,
+    queryFn: () =>
+      api.get<Item[]>("/items/", { params }).then(r => r.data),
+    staleTime: 60_000      // 1 min sin refetch
+  });
 
-  return { data, loading, refetch: () => setReload(r => r + 1) };
+  return { data: data ?? [], loading: isLoading, refetch };
 }

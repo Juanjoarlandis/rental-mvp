@@ -32,9 +32,10 @@
     "@headlessui/react": "^2.2.4",
     "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^3.3.4",
+    "@tanstack/react-query": "^5.38.0",
     "axios": "^1.6.8",
     "clsx": "^2.1.1",
-    "focus-trap-react": "^10.2.1",              
+    "focus-trap-react": "^10.2.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.60.0",
@@ -45,7 +46,7 @@
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
-    "@tailwindcss/container-queries": "", 
+    "@tailwindcss/container-queries": "",
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/line-clamp": "^0.4.4",
     "@tailwindcss/typography": "^0.5.16",
@@ -210,31 +211,67 @@ module.exports = {
 
 --- frontend/src/App.tsx ---
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import { AuthProvider } from "./hooks/useAuth";
 import Header from "./components/layout/Header";
+import Footer from "./components/layout/Footer";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import Footer from './components/layout/Footer';
 import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import Protected from "./Protected";
+
 import "./styles/global.css";
+
+const queryClient = new QueryClient();
 
 export default function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/register" element={<Register />} />
-        </Routes>
-        <Footer />
-      </BrowserRouter>
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <BrowserRouter>
+          <Header />
+
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+
+            {/*  RUTA SEGURA  */}
+            <Route
+              path="/dashboard"
+              element={
+                <Protected>
+                  <Dashboard />
+                </Protected>
+              }
+            />
+          </Routes>
+
+          <Footer />
+        </BrowserRouter>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
+
+
+--- frontend/src/api.ts ---
+import axios from "axios";
+
+/**
+ * Singleton Axios con:
+ *  · baseURL "/api"
+ *  · Authorization automático si hay token en localStorage
+ */
+export const api = axios.create({ baseURL: "/api" });
+
+api.interceptors.request.use(cfg => {
+  const token = localStorage.getItem("token");
+  if (token) cfg.headers.Authorization = `Bearer ${token}`;
+  return cfg;
+});
 
 
 --- frontend/src/main.tsx ---
@@ -281,15 +318,28 @@ export function resolveImage(url: string | undefined, fallback: string) {
 }
 
 
+--- frontend/src/Protected.tsx ---
+import { Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "./hooks/useAuth";
+
+export default function Protected({ children }: { children: JSX.Element }) {
+  const { token } = useAuth();
+  const loc = useLocation();
+  return token ? children : <Navigate to="/login" replace state={{ from: loc }} />;
+}
+
+
 --- frontend/src/hooks/useAuth.tsx ---
 import React, { createContext, useContext, useState } from "react";
 
+/* ------------------------------------------------------------------ */
+/*                       Contexto & proveedor                         */
+/* ------------------------------------------------------------------ */
 type AuthContextT = {
   token: string | null;
   login: (t: string) => void;
   logout: () => void;
 };
-
 const AuthContext = createContext<AuthContextT | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -316,11 +366,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
+/* ------------------------------------------------------------------ */
+/*                           Hooks util                               */
+/* ------------------------------------------------------------------ */
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error("useAuth debe usarse dentro de <AuthProvider>");
   return ctx;
 };
+
+/** Lee el token directo de localStorage (válido fuera de React). */
+export const getTokenLS = () => localStorage.getItem("token");
 
 
 --- frontend/src/styles/global.css ---
@@ -370,8 +426,7 @@ export const useAuth = () => {
 
 
 --- frontend/src/features/auth/register.ts ---
-// src/features/auth/register.ts
-import axios from "axios";
+import { api } from "../../api";
 
 /** Lanza 400 si el username o el email ya están en uso. */
 export async function register(
@@ -379,20 +434,18 @@ export async function register(
   email: string,
   password: string
 ): Promise<void> {
-  await axios.post("/api/auth/signup", { username, email, password });
+  await api.post("/auth/signup", { username, email, password });
 }
 
 
 --- frontend/src/features/auth/login.ts ---
-import axios from "axios";
+import { api } from "../../api";
 
 export async function login(username: string, password: string): Promise<string> {
-  const { data } = await axios.post(
-    "/api/auth/token",
+  const { data } = await api.post(
+    "/auth/token",
     new URLSearchParams({ username, password }),
-    {
-      headers: { "Content-Type": "application/x-www-form-urlencoded" }
-    }
+    { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
   );
   return data.access_token as string;
 }
@@ -420,8 +473,8 @@ export default function useCategories() {
 
 
 --- frontend/src/features/items/useItems.ts ---
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "../../api";
 
 export type Item = {
   id: number;
@@ -429,27 +482,21 @@ export type Item = {
   description?: string;
   price_per_h: number;
   available: boolean;
-  image_url?: string;          // 🆕  ← añade la propiedad
+  image_url?: string;
   categories?: { id: number; name: string }[];
 };
 
-
 export function useItems(params?: URLSearchParams) {
-  const [data, setData] = useState<Item[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [reload, setReload] = useState(0);
+  const queryKey = ["items", params?.toString() ?? ""];
 
-  useEffect(() => {
-    setLoading(true);
-    axios
-      .get<Item[]>("/api/items/", { params })
-      .then(res => setData(res.data))
-      .catch(console.error)
-      .finally(() => setLoading(false));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params?.toString(), reload]);
+  const { data, isLoading, refetch } = useQuery<Item[]>({
+    queryKey,
+    queryFn: () =>
+      api.get<Item[]>("/items/", { params }).then(r => r.data),
+    staleTime: 60_000      // 1 min sin refetch
+  });
 
-  return { data, loading, refetch: () => setReload(r => r + 1) };
+  return { data: data ?? [], loading: isLoading, refetch };
 }
 
 
@@ -978,8 +1025,8 @@ export default function RentalList() {
 
 
 --- frontend/src/features/rentals/useRentals.ts ---
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "../../api";
 import { Item } from "../items/useItems";
 
 export type Rental = {
@@ -991,22 +1038,14 @@ export type Rental = {
   returned: boolean;
 };
 
-export function useRentals(token: string | null) {
-  const [data, setData] = useState<Rental[]>([]);
-  const [loading, setLoading] = useState(true);
+export function useRentals(enabled: boolean) {
+  const { data, isLoading } = useQuery<Rental[]>({
+    queryKey: ["rentals"],
+    queryFn: () => api.get<Rental[]>("/rentals/me").then(r => r.data),
+    enabled         // solo cuando el usuario tiene token
+  });
 
-  useEffect(() => {
-    if (!token) return;
-    setLoading(true);
-    axios
-      .get<Rental[]>("/api/rentals/me", {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      .then(res => setData(res.data))
-      .finally(() => setLoading(false));
-  }, [token]);
-
-  return { data, loading };
+  return { data: data ?? [], loading: isLoading };
 }
 
 
@@ -1795,21 +1834,31 @@ export default function Footer() {
 
 
 --- frontend/src/components/layout/Header.tsx ---
+// src/components/layout/Header.tsx
 import { Link, NavLink } from 'react-router-dom';
+import logo from '../../assets/logo.png';
 import { useAuth } from '../../hooks/useAuth';
-import { Bars3Icon } from '@heroicons/react/24/outline';
 
 export default function Header() {
   const { token, logout } = useAuth();
+
   return (
     <header className="sticky top-0 z-30 bg-white/80 backdrop-blur shadow-sm">
-      <div className="container flex h-14 items-center gap-6">
-        <Link to="/" className="flex items-center gap-1 text-lg font-bold text-brand">
-          <Bars3Icon className="h-6 w-6" />
-          Rental‑MVP
+      {/* ↑ duplica el padding vertical para más “aire” */}
+      <div className="container flex items-center gap-8 py-4 lg:py-6">
+        {/* Logo */}
+        <Link to="/" aria-label="Inicio" className="flex items-center">
+          {/* será ≈96 px en desktop */}
+          <img
+            src={logo}
+            alt="Logo Rental-MVP"
+            className="h-14 md:h-20 lg:h-24 w-auto select-none"
+            decoding="async"
+          />
         </Link>
 
-        <nav className="ml-auto flex gap-6 text-sm font-semibold text-gray-600">
+        {/* Navegación */}
+        <nav className="ml-auto flex gap-8 text-base font-semibold text-gray-600">
           {token ? (
             <>
               <NavLink to="/dashboard" className="hover:text-gray-900">

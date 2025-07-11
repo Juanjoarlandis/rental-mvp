@@ -1,5 +1,4 @@
-// src/features/auth/register.ts
-import axios from "axios";
+import { api } from "../../api";
 
 /** Lanza 400 si el username o el email ya están en uso. */
 export async function register(
@@ -7,5 +6,5 @@ export async function register(
   email: string,
   password: string
 ): Promise<void> {
-  await axios.post("/api/auth/signup", { username, email, password });
+  await api.post("/auth/signup", { username, email, password });
 }

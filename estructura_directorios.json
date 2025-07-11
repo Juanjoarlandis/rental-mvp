@@ -6,6 +6,13 @@
                 "name": "src",
                 "dirs": [
                     {
+                        "name": "assets",
+                        "dirs": [],
+                        "files": [
+                            "logo.png"
+                        ]
+                    },
+                    {
                         "name": "hooks",
                         "dirs": [],
                         "files": [
@@ -111,8 +118,10 @@
                 ],
                 "files": [
                     "App.tsx",
+                    "api.ts",
                     "main.tsx",
-                    "utils.ts"
+                    "utils.ts",
+                    "Protected.tsx"
                 ]
             }
         ],

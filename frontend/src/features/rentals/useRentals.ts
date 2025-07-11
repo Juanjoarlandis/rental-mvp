@@ -1,5 +1,5 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "../../api";
 import { Item } from "../items/useItems";
 
 export type Rental = {
@@ -11,20 +11,20 @@ export type Rental = {
   returned: boolean;
 };
 
+/**
+ * Devuelve la lista de alquileres del usuario.  
+ * Solo dispara la petición cuando `token` es *truthy*.
+ */
 export function useRentals(token: string | null) {
-  const [data, setData] = useState<Rental[]>([]);
-  const [loading, setLoading] = useState(true);
+  const enabled = Boolean(token);          // ← normalizamos
 
-  useEffect(() => {
-    if (!token) return;
-    setLoading(true);
-    axios
-      .get<Rental[]>("/api/rentals/me", {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      .then(res => setData(res.data))
-      .finally(() => setLoading(false));
-  }, [token]);
+  const { data, isLoading } = useQuery<Rental[]>({
+    queryKey: ["rentals"],
+    queryFn: () => api.get<Rental[]>("/rentals/me").then(r => r.data),
+    enabled,                               // ✓ ahora siempre boolean
+    staleTime: 60_000,
+    retry: false
+  });
 
-  return { data, loading };
+  return { data: data ?? [], loading: isLoading };
 }
